@@ -62,7 +62,7 @@ public class MainGUIForm extends JFrame implements OnFileLoadedListener, OnFileC
         File file = listModel.get(fileIndex).file;
 
         new DatasetOperationDialog(file);
-        //  dispose();
+     //     dispose(); uncoment to kill previous JFrame
     }
 
     /**
