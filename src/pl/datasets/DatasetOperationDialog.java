@@ -11,6 +11,5 @@ public class DatasetOperationDialog {
 
     public DatasetOperationDialog(File file) {
         dialog = new DatasetDialog(file.getAbsolutePath());
-
     }
 }
