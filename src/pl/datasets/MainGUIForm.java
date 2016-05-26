@@ -63,12 +63,15 @@ public class MainGUIForm extends JFrame implements OnFileLoadedListener, OnFileC
     public void onChosen(int fileIndex) {
         log("onChosen()");
         File file = listModel.get(fileIndex).file;
-        List<Item> itemsRead = new CSVReader<Item>().skipFirstLine().readFile(file, CSVReader.DEFAULT);
-        for (Item it : itemsRead) {
-            System.out.println("next item: " + it);
-        }
+
+        new DatasetOperationDialog(file);
+      //  dispose();
     }
 
+    /**
+     * on removed
+     * @param fileIndex
+     */
     @Override
     public void onRemoved(int fileIndex) {
         //double click event: remove dataset

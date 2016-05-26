@@ -10,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import static com.sun.activation.registries.LogSupport.log;
-
 /**
  * @author Lukasz
  * @since 26.05.2016.
