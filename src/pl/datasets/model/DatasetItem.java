@@ -1,5 +1,6 @@
 package pl.datasets.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
 public class DatasetItem {
 
     private long timestamp;
-    private List<Double> values;
+    private List<Double> values = new ArrayList<>();
 
     public long getTimestamp() {
         return timestamp;

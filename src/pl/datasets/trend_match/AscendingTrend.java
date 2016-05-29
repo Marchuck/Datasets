@@ -7,17 +7,34 @@ import java.util.List;
 /**
  * Created by JOHANNES on 5/29/2016.
  */
-public final class GrowingTrend extends TrendingPartsHelper {
+public class AscendingTrend extends TrendingSubsetWrapper {
 
 
-    GrowingTrend(List<DatasetItem> dataset) {
+    public static AscendingTrend getInstance(List<DatasetItem> dataset) {
+        return new AscendingTrend(dataset);
+    }
+
+
+
+    private AscendingTrend(List<DatasetItem> dataset) {
         super(dataset);
         setMinTrendLength(2);
     }
 
 
+
+
     @Override
     boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate) {
+
+        if (null != trendCandidate&&trendCandidate.size()>0){
+                System.out.print("\n trend candidate: ");
+            for (DatasetItem item:trendCandidate){
+
+                System.out.print(String.valueOf(item.getTimestamp())+" ");
+
+            }
+        }
 
         if (trendCandidate.size() == 1) {
 
@@ -27,16 +44,18 @@ public final class GrowingTrend extends TrendingPartsHelper {
             DatasetItem firstItem;
             DatasetItem secondItem;
 
-            for (int i = 0; i < trendCandidate.size() - 1; i++) {
+            for (int i = 0; i < trendCandidate.size()-1; i++) {
 
                 firstItem = trendCandidate.get(i);
                 secondItem = trendCandidate.get(i + 1);
 
-                if (secondItem.getValues().get(0) < firstItem.getValues().get(0)) {
+                if (secondItem.getValues().get(0) <= firstItem.getValues().get(0)) {
                     return false;
                 }
             }
         }
         return true;
     }
+
+
 }
