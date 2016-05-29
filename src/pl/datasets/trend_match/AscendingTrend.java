@@ -27,14 +27,7 @@ public class AscendingTrend extends TrendingSubsetWrapper {
     @Override
     boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate) {
 
-        if (null != trendCandidate&&trendCandidate.size()>0){
-                System.out.print("\n trend candidate: ");
-            for (DatasetItem item:trendCandidate){
-
-                System.out.print(String.valueOf(item.getTimestamp())+" ");
-
-            }
-        }
+        printAttemptData(trendCandidate);
 
         if (trendCandidate.size() == 1) {
 

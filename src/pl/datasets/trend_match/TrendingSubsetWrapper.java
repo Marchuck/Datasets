@@ -126,6 +126,16 @@ public abstract class TrendingSubsetWrapper {
 
     }
 
+    protected void printAttemptData(List<DatasetItem> trendCandidate) {
+        if (null != trendCandidate&&trendCandidate.size()>0){
+            System.out.print("\n trend candidate: ");
+            for (DatasetItem item:trendCandidate){
+
+                System.out.print(String.valueOf(item.getTimestamp())+" ");
+
+            }
+        }
+    }
 
 }
 
