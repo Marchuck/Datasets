@@ -3,6 +3,7 @@ package pl.datasets;
 import javax.swing.*;
 
 /**
+ *
  * @author Lukasz
  * @since 26.05.2016.
  */
@@ -17,7 +18,9 @@ public class Application {
 
     public static void main(String[] args) {
         Application.getInstance();
+
     }
+
 
 
     private Application() {
