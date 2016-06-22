@@ -4,13 +4,14 @@ import weka.associations.Apriori;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
-import static pl.datasets.weka.NumericToNominalWrapper.wrap;
+import static pl.datasets.weka.ToNominal.wrap;
 
 /**
  * @author Lukasz
  * @since 20.06.2016.
  */
 public class AprioriOutput {
+
 
     /**
      * Expects a dataset as first parameter. The last attribute is used
@@ -21,8 +22,14 @@ public class AprioriOutput {
      */
     public static void main(String[] args) throws Exception {
         // load data
-        Instances data = ConverterUtils.DataSource.read("ad_viz_tile_data.csv");
-        data = wrap(data, "1-5");
+        Instances data = ConverterUtils.DataSource.read("data/denmark.csv");
+        data = wrap(data);
+//        ConverterUtils.DataSource source = new ConverterUtils.DataSource("aaaa.csv");
+//        ConverterUtils.DataSource source = new ConverterUtils.DataSource("precipitation_on_few_places_1949.csv");
+
+//        Instances data = wrap(source.getDataSet(),"1-18");
+
+
         //wrap data(numeric into nominal values
         data.setClassIndex(data.numAttributes() - 1);
         // build associator
@@ -31,5 +38,15 @@ public class AprioriOutput {
         apriori.buildAssociations(data);
         // output associator
         System.out.println(apriori);
+    }
+
+    public static Apriori performApriori(Instances instances) throws Exception {
+        Instances data = new Instances(instances);
+        data.setClassIndex(data.numAttributes() - 1);
+        // build associator
+        Apriori apriori = new Apriori();
+        apriori.setClassIndex(data.classIndex());
+        apriori.buildAssociations(data);
+        return apriori;
     }
 }

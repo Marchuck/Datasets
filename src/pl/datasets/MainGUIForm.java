@@ -26,7 +26,6 @@ public class MainGUIForm extends JFrame implements OnFileLoadedListener, OnFileC
     private JList<NamedFile> list1;
     private DefaultListModel<NamedFile> listModel;
 
-
     public MainGUIForm() throws HeadlessException {
         super("Datasets");
         setContentPane(rootPanel);

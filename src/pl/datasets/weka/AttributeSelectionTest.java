@@ -10,7 +10,6 @@ import weka.core.Instances;
 import weka.core.Utils;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.NumericToNominal;
 
 import java.util.Random;
 
@@ -81,8 +80,8 @@ public class AttributeSelectionTest {
     public static void main(String[] args) throws Exception {
         // load data
         System.out.println("\n0. Loading data");
-        DataSource source = new DataSource(NumericToNominalWrapper.DATASET1);
-        Instances data = NumericToNominalWrapper.wrap(source.getDataSet(),"1-5");
+        DataSource source = new DataSource(ToNominal.DATASET1);
+        Instances data = ToNominal.wrap(source.getDataSet());
         if (data.classIndex() == -1)
             data.setClassIndex(data.numAttributes() - 1);
 
@@ -94,23 +93,5 @@ public class AttributeSelectionTest {
 
         // 3. low-level
         useLowLevel(data);
-    }
-
-
-
-    public static void kurde() throws Exception {
-        //load training instances
-//    Instances originalTrain= //...load data with numeric attributes
-        DataSource source = new DataSource("aaaa.csv");
-        Instances originalTrain = source.getDataSet();
-        NumericToNominal convert = new NumericToNominal();
-        String[] options = new String[2];
-        options[0] = "-R";
-        options[1] = "1-2";  //range of variables to make numeric
-
-        convert.setOptions(options);
-        convert.setInputFormat(originalTrain);
-
-        Instances newData = Filter.useFilter(originalTrain, convert);
     }
 }
