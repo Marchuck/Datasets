@@ -4,6 +4,7 @@ import pl.datasets.model.DatasetItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Created by JOHANNES on 5/29/2016.
@@ -17,9 +18,7 @@ public abstract class TrendingSubsetWrapper {
     private List<Long> singleTrendList = new ArrayList<>();
     private List<DatasetItem> tempWorkingList = new ArrayList<>();
 
-
     private int minTrendLength = 2;
-
 
     /**
      * Set minimal length of the searched trend
@@ -135,6 +134,13 @@ public abstract class TrendingSubsetWrapper {
 
             }
         }
+
+
+    }
+
+
+    public void fooo(int col, Callable<Boolean> callable){
+
     }
 
 }

@@ -1,6 +1,10 @@
 package pl.datasets;
 
+import pl.datasets.model.DatasetItem;
+
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Lukasz
@@ -26,4 +30,7 @@ public class Application {
         currentUsedFrame = new MainGUIForm();
     }
 
+    public List<DatasetItem> getDataset() {
+        return new ArrayList<>();
+    }
 }
