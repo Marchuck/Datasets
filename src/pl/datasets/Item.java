@@ -1,7 +1,5 @@
 package pl.datasets;
 
-import pl.datasets.utils.NullSafe;
-
 import java.util.Arrays;
 
 /**
@@ -20,13 +18,6 @@ public class Item {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append('[');
-        if (NullSafe.nonEmpty(attrs)) {
-            for (String s : attrs) sb.append(s).append(",");
-        }
-        sb.append(']');
-
-        return sb.toString();
+        return Arrays.toString(attrs);
     }
 }

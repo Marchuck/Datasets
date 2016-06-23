@@ -1,10 +1,12 @@
 package pl.datasets.utils;
 
+import java.io.Serializable;
+
 /**
  * @author Lukasz
  * @since 22.06.2016.
  */
-public class Event {
+public class Event implements Serializable {
     public Operation operation;
     public double value;
     public int columnIndex;
