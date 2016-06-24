@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 public class Event implements Serializable {
     public Operation operation;
+    public String operationName;
     public double value;
     public int columnIndex;
 
@@ -22,7 +23,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "operation: " + operation +
+        return "operation: " + operationName +
                 ", value: " + value +
                 ", columnIndex: " + columnIndex;
     }

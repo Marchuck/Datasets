@@ -136,6 +136,7 @@ public class Spinners extends JPanel {
             public void itemStateChanged(ItemEvent e) {
                 Utils.log("itemStateChanged(" + e.getItem() + ")");
                 currentEvent.operation = Operations.match(e.getItem());
+                currentEvent.operationName = (String) e.getItem();
             }
         });
 
@@ -164,23 +165,6 @@ public class Spinners extends JPanel {
         mainDialog.add(rootPanel);
         mainDialog.pack();
         mainDialog.setBounds(parent.getX() + 100, parent.getY() + 100, 450, 300);
-
         mainDialog.setVisible(true);
-    }
-
-    /**
-     * Return the formatted text field used by the editor, or
-     * null if the editor doesn't descend from JSpinner.DefaultEditor.
-     */
-    public JFormattedTextField getTextField(JSpinner spinner) {
-        JComponent editor = spinner.getEditor();
-        if (editor instanceof JSpinner.DefaultEditor) {
-            return ((JSpinner.DefaultEditor) editor).getTextField();
-        } else {
-            System.err.println("Unexpected editor type: "
-                    + spinner.getEditor().getClass()
-                    + " isn't a descendant of DefaultEditor");
-            return null;
-        }
     }
 }
