@@ -8,6 +8,8 @@ import java.awt.*;
  * Defines the app colors here
  */
 public class Pallete {
+
+
     private Pallete() {
     }
 
