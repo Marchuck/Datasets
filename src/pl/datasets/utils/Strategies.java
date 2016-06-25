@@ -59,7 +59,6 @@ public class Strategies {
                 }
             }
             return true;
-
         }
     }
 
@@ -89,7 +88,6 @@ public class Strategies {
                 }
             }
             return true;
-
         }
     }
 

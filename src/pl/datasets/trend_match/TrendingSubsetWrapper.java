@@ -2,6 +2,8 @@ package pl.datasets.trend_match;
 
 import pl.datasets.model.ColumnStrategyPair;
 import pl.datasets.model.DatasetItem;
+import pl.datasets.utils.Event;
+import pl.datasets.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
  */
 public class TrendingSubsetWrapper {
 
+    public static final String TAG = TrendingSubsetWrapper.class.getSimpleName();
     private List<DatasetItem> dataset;
     private List<List<Long>> trendsList = new ArrayList<>();
     private List<Long> singleTrendList = new ArrayList<>();
@@ -30,12 +33,23 @@ public class TrendingSubsetWrapper {
         return new TrendingSubsetWrapper(dataset);
     }
 
+    public static List<ColumnStrategyPair> wrap(List<Event> events) {
+        Utils.log(TAG + "_wrap");
+        List<ColumnStrategyPair> l = new ArrayList<>();
+        for (Event e : events) l.add(wrap(e));
+        return l;
+    }
+
+    private static ColumnStrategyPair wrap(Event e) {
+        return new ColumnStrategyPair(e.strategy, e.columnIndex);
+    }
+
     /**
      * Set minimal length of the searched trend
      *
      * @param minTrendLength
      */
-    void setMinTrendLength(int minTrendLength) {
+    public void setMinTrendLength(int minTrendLength) {
         this.minTrendLength = minTrendLength;
     }
 
@@ -96,7 +110,6 @@ public class TrendingSubsetWrapper {
         putTrendDelimiter();
     }
 
-
     public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<ColumnStrategyPair> columnStrategyPairs) {
 
         for (ColumnStrategyPair pair : columnStrategyPairs) {
@@ -108,8 +121,6 @@ public class TrendingSubsetWrapper {
 
     }
 
-
-
     private void putDiscoveredTrend(List<DatasetItem> trend) {
 
         for (DatasetItem item : trend) {
@@ -117,7 +128,6 @@ public class TrendingSubsetWrapper {
             singleTrendList.add(item.getTimestamp());
         }
     }
-
 
     private void putDiscoveredTrend(DatasetItem trendItem) {
 
@@ -138,18 +148,16 @@ public class TrendingSubsetWrapper {
     }
 
     protected void printAttemptData(List<DatasetItem> trendCandidate) {
-        if (null != trendCandidate&&trendCandidate.size()>0){
+        if (null != trendCandidate && trendCandidate.size() > 0) {
             System.out.print("\n trend candidate: ");
-            for (DatasetItem item:trendCandidate){
+            for (DatasetItem item : trendCandidate) {
 
-                System.out.print(String.valueOf(item.getTimestamp())+" ");
+                System.out.print(String.valueOf(item.getTimestamp()) + " ");
 
             }
         }
 
 
     }
-
-
 }
 

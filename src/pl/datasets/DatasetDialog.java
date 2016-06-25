@@ -1,6 +1,7 @@
 package pl.datasets;
 
 import pl.datasets.model.DatasetItem;
+import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
 import pl.datasets.widgets.Caller;
@@ -10,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,12 +21,14 @@ import java.util.List;
 public class DatasetDialog extends JFrame {
 
     private static int index = 0;
+    List<Event> events = new ArrayList<>();
     private JPanel panel1;
     private JButton addButton;
     private JPanel current_entry;
+    private JButton computeButton;
     private String[] properties;
     private String[] operations;
-
+    private JLabel jlabel;
     private List<DatasetItem> items;
     private Spinners spinnersDialog = new Spinners();
     private Color[] colors = new Color[]{Color.cyan, Color.yellow, Color.green, Color.orange, Color.pink, Color.lightGray};
@@ -36,23 +40,40 @@ public class DatasetDialog extends JFrame {
         this.operations = operations;
         properties = getAttributeNames(properyNames);
 //        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(300, 200));
+        setPreferredSize(new Dimension(300, 200));
         pack();
         setVisible(true);
         init();
     }
 
     private void init() {
-
+        computeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
+                wrapper.setMinTrendLength(1);
+                wrapper.getTrends(TrendingSubsetWrapper.wrap(events));
+            }
+        });
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 spinnersDialog.display(addButton, properties, operations, new Caller<Event>() {
                     @Override
                     public void call(Event event) {
+
                         Utils.log(event.toString());
-                        final JLabel jlabel = new JLabel(event.toString());
-                        jlabel.setBackground(colorIndex());
-                        current_entry.add(jlabel);
+
+                        events.add(event);
+
+                        if (jlabel == null) {
+                            jlabel = new JLabel(event.toString());
+                            jlabel.setBackground(colorIndex());
+                            current_entry.add(jlabel);
+                        } else {
+                            jlabel.setText(jlabel.getText() + "\n" + event.toString());
+                        }
                         current_entry.revalidate();
                         /*final JButton button = new JButton(event.operationName);
                         button.addActionListener(new ActionListener() {
