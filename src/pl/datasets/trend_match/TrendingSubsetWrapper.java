@@ -1,5 +1,6 @@
 package pl.datasets.trend_match;
 
+import pl.datasets.interfaces.ValueCompareStrategy;
 import pl.datasets.model.DatasetItem;
 
 import java.util.ArrayList;
@@ -138,10 +139,6 @@ public abstract class TrendingSubsetWrapper {
 
     }
 
-
-    public void fooo(int col, Callable<Boolean> callable){
-
-    }
 
 }
 

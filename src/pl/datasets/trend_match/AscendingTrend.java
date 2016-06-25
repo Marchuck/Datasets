@@ -1,5 +1,6 @@
 package pl.datasets.trend_match;
 
+import pl.datasets.interfaces.ValueCompareStrategy;
 import pl.datasets.model.DatasetItem;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class AscendingTrend extends TrendingSubsetWrapper {
     boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate) {
 
         printAttemptData(trendCandidate);
-
+        AscendingAQIStrategy strategy = new AscendingAQIStrategy();
         if (trendCandidate.size() == 1) {
             return true;
         } else if (trendCandidate.size() > 1) {
@@ -41,12 +42,20 @@ public class AscendingTrend extends TrendingSubsetWrapper {
                 firstItem = trendCandidate.get(i);
                 secondItem = trendCandidate.get(i + 1);
 
-                if (secondItem.getValues().get(1) <= firstItem.getValues().get(1)) {
+                if (strategy.getRowToCompare(secondItem) <= strategy.getRowToCompare(firstItem)) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    private static class AscendingAQIStrategy implements ValueCompareStrategy<Double>{
+
+        @Override
+        public Double getRowToCompare(DatasetItem item) {
+            return item.getValues().get(1);
+        }
     }
 
 
