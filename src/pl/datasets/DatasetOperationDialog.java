@@ -1,10 +1,13 @@
 package pl.datasets;
 
+import pl.datasets.interfaces.TrendDetectingStrategy;
 import pl.datasets.load.CSVReader;
 import pl.datasets.model.BaseItem;
+import pl.datasets.model.ColumnStrategyPair;
 import pl.datasets.model.DatasetItem;
-import pl.datasets.trend_match.AscendingTrend;
+import pl.datasets.utils.Strategies;
 import pl.datasets.utils.Utils;
+import pl.datasets.trend_match.TrendingSubsetWrapper;
 
 import java.io.File;
 import java.text.ParseException;
@@ -44,7 +47,18 @@ public class DatasetOperationDialog {
     }
 
     public static void main(String[] args) {
-        new DatasetOperationDialog(true).getFulldataset(true);
+
+        List<DatasetItem> data =  new DatasetOperationDialog(true).getFulldataset(true);
+
+        TrendingSubsetWrapper trend = TrendingSubsetWrapper.getInstance(data);
+
+        List<ColumnStrategyPair> columnStrategyPairs = new ArrayList<>();
+        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("++"),0));
+        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("--"),2));
+        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy(">",20),1));
+
+        trend.getTrends(columnStrategyPairs);
+
     }
 
     private static <X> int getMinSize(List<List<X>> sets) {
@@ -114,8 +128,7 @@ public class DatasetOperationDialog {
 
     private void initAscendingTrendRecognition(List<DatasetItem> dataset) {
 
-        AscendingTrend trend = AscendingTrend.getInstance(dataset);
-        trend.getTrends();
+
 
     }
 
@@ -139,4 +152,8 @@ public class DatasetOperationDialog {
         }
         return dataset;
     }
+
+
+
+
 }

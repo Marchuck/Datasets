@@ -8,7 +8,7 @@ import pl.datasets.model.DatasetItem;
  */
 public class OperationManager {
     public static Operation create(final Object value) {
-        if (value instanceof String) {
+       /* if (value instanceof String) {
             return new Operation() {
                 @Override
                 public boolean compute(DatasetItem first, double valueToCompare, int columnIndex) {
@@ -17,7 +17,7 @@ public class OperationManager {
                     else return false;
                 }
             };
-        }
+        }*/
         return null;
     }
 }

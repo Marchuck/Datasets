@@ -51,7 +51,7 @@ public class DatasetDialog extends JFrame {
                         jlabel.setBackground(colorIndex());
                         current_entry.add(jlabel);
                         current_entry.revalidate();
-                        final JButton button = new JButton(event.operationName);
+                        /*final JButton button = new JButton(event.operationName);
                         button.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -63,7 +63,7 @@ public class DatasetDialog extends JFrame {
                         });
                         current_entry.add(button);
                         current_entry.revalidate();
-                        current_entry.repaint();
+                        current_entry.repaint();*/
                     }
                 });
             }

@@ -1,5 +1,7 @@
 package pl.datasets.utils;
 
+import pl.datasets.interfaces.TrendDetectingStrategy;
+
 import java.io.Serializable;
 
 /**
@@ -7,24 +9,16 @@ import java.io.Serializable;
  * @since 22.06.2016.
  */
 public class Event implements Serializable {
-    public Operation operation;
-    public String operationName;
-    public double value;
+    public TrendDetectingStrategy strategy;
+    public double treshold;
     public int columnIndex;
 
     public Event() {
     }
 
-    public Event(Operation operation, double value, int columnIndex) {
-        this.operation = operation;
-        this.value = value;
+    public Event(TrendDetectingStrategy strategy, double treshold, int columnIndex) {
+        this.strategy = strategy;
+        this.treshold = treshold;
         this.columnIndex = columnIndex;
-    }
-
-    @Override
-    public String toString() {
-        return "operation: " + operationName +
-                ", value: " + value +
-                ", columnIndex: " + columnIndex;
     }
 }

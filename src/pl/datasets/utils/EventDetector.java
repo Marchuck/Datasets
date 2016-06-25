@@ -12,7 +12,7 @@ import java.util.List;
 public class EventDetector {
 
 
-    public int detect(List<Event> events) {
+    /*public int detect(List<Event> events) {
         List<DatasetItem> items = get();
         int matches = 0;
         for (DatasetItem it : items) {
@@ -27,7 +27,7 @@ public class EventDetector {
         }
         return matches;
 
-    }
+    }*/
 
     private List<DatasetItem> get() {
         return Application.getInstance().getDataset();

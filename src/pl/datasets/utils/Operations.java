@@ -15,25 +15,11 @@ public class Operations {
                 return LEQ.create();
             else if (asString.equalsIgnoreCase(">="))
                 return GEQ.create();
-            else if (asString.equalsIgnoreCase("~"))
-                return NOT.create();
         }
         return null;
     }
 
-    /**
-     * not
-     */
-    public static class NOT implements Operation {
-        public static NOT create() {
-            return new NOT();
-        }
 
-        @Override
-        public boolean compute(DatasetItem first, double valueToCompare, int columnIndex) {
-            return Double.compare(first.getValues().get(columnIndex), valueToCompare) != 0d;
-        }
-    }
 
     /**
      * Less or equal
@@ -44,8 +30,8 @@ public class Operations {
         }
 
         @Override
-        public boolean compute(DatasetItem first, double valueToCompare, int columnIndex) {
-            return first.getValues().get(columnIndex) <= valueToCompare;
+        public boolean compute(double value, double valueToCompare) {
+            return value <= valueToCompare;
         }
     }
 
@@ -58,8 +44,8 @@ public class Operations {
         }
 
         @Override
-        public boolean compute(DatasetItem first, double valueToCompare, int columnIndex) {
-            return first.getValues().get(columnIndex) >= valueToCompare;
+        public boolean compute(double value, double valueToCompare) {
+            return value >= valueToCompare;
         }
     }
 }

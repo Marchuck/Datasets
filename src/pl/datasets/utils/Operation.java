@@ -9,5 +9,5 @@ import java.io.Serializable;
  * @since 22.06.2016.
  */
 public interface Operation extends Serializable {
-    boolean compute(DatasetItem first, double valueToCompare, int columnIndex);
+    boolean compute(double value, double valueToCompare);
 }

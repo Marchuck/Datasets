@@ -1,18 +1,17 @@
 package pl.datasets.trend_match;
 
-import pl.datasets.interfaces.ValueCompareStrategy;
+import pl.datasets.model.ColumnStrategyPair;
 import pl.datasets.model.DatasetItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * Created by JOHANNES on 5/29/2016.
  * Wrapper for discovering trending subsets in dataset
  * To be implemented with formula for determine if subset is trending
  */
-public abstract class TrendingSubsetWrapper {
+public class TrendingSubsetWrapper {
 
     private List<DatasetItem> dataset;
     private List<List<Long>> trendsList = new ArrayList<>();
@@ -30,8 +29,12 @@ public abstract class TrendingSubsetWrapper {
         this.minTrendLength = minTrendLength;
     }
 
+    public static TrendingSubsetWrapper getInstance(List<DatasetItem> dataset){
+        return new TrendingSubsetWrapper(dataset);
+    }
 
-    TrendingSubsetWrapper(List<DatasetItem> dataset) {
+
+    private TrendingSubsetWrapper(List<DatasetItem> dataset) {
         this.dataset = dataset;
 
         printDatasetSummary(dataset);
@@ -48,8 +51,8 @@ public abstract class TrendingSubsetWrapper {
         }
     }
 
-    public List<List<Long>> getTrends() {
-        findTrends();
+    public List<List<Long>> getTrends(List<ColumnStrategyPair> columnStrategyPairs) {
+        findTrends(columnStrategyPairs);
         if (null != trendsList && trendsList.size() > 0) {
 
             System.out.print("\n");
@@ -66,7 +69,7 @@ public abstract class TrendingSubsetWrapper {
         return trendsList;
     }
 
-    private void findTrends() {
+    private void findTrends(List<ColumnStrategyPair> columnStrategyPairs) {
 
         for (DatasetItem item : dataset) {
 
@@ -74,7 +77,7 @@ public abstract class TrendingSubsetWrapper {
 
             if (tempWorkingList.size() >= minTrendLength) {
 
-                if (!checkIfMatchesTrend(tempWorkingList)) {
+                if (!checkIfMatchesTrend(tempWorkingList, columnStrategyPairs)) {
 
                     tempWorkingList.clear();
                     tempWorkingList.add(item);
@@ -95,7 +98,18 @@ public abstract class TrendingSubsetWrapper {
     }
 
 
-    abstract boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate);
+
+
+    public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<ColumnStrategyPair> columnStrategyPairs){
+
+        for (ColumnStrategyPair pair: columnStrategyPairs){
+            if (!pair.getStrategy().hasTrend(trendCandidate,pair.getColumnId())){
+                return false;
+            }
+        }
+        return true;
+
+    }
 
 
 

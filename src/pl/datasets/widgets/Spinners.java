@@ -135,8 +135,8 @@ public class Spinners extends JPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 Utils.log("itemStateChanged(" + e.getItem() + ")");
-                currentEvent.operation = Operations.match(e.getItem());
-                currentEvent.operationName = (String) e.getItem();
+               /* currentEvent.operation = Operations.match(e.getItem());
+                currentEvent.operationName = (String) e.getItem();*/
             }
         });
 
@@ -146,9 +146,9 @@ public class Spinners extends JPanel {
             @Override
             public void stateChanged(ChangeEvent e) {
                 Utils.log("onChanged " + spinnerValue.getModel().getValue());
-                if (spinnerValue.getModel() instanceof SpinnerNumberModel) {
+               /* if (spinnerValue.getModel() instanceof SpinnerNumberModel) {
                     currentEvent.value = ((Double) spinnerValue.getModel().getValue());
-                } else currentEvent.value = -1;
+                } else currentEvent.value = -1;*/
             }
         });
         JButton jbutton = new JButton("Add");
