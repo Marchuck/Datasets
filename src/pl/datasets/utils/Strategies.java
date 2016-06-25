@@ -10,21 +10,24 @@ import java.util.List;
  */
 public class Strategies {
 
-    public static TrendDetectingStrategy recognizeStrategy(String pattern) throws IllegalArgumentException{
-        switch(pattern){
+    public static TrendDetectingStrategy recognizeStrategy(String pattern) throws IllegalArgumentException  {
+        switch (pattern) {
 
             case "++":
-            return new AscendingTrendStrategy();
+                return new AscendingTrendStrategy();
             case "--":
-            return new DescendingTrendStrategy();
-
+                return new DescendingTrendStrategy();
+            case ">":
+            case "<":
+            case "==":
+                throw new IllegalArgumentException("Treshold not set");
         }
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException("Invalid operator");
     }
 
 
-    public static TrendDetectingStrategy recognizeStrategy(String pattern, double treshold) throws IllegalArgumentException{
-        switch(pattern){
+    public static TrendDetectingStrategy recognizeStrategy(String pattern, double treshold) throws IllegalArgumentException {
+        switch (pattern) {
 
             case ">":
                 return new GreaterThanStrategy(treshold);
@@ -35,7 +38,6 @@ public class Strategies {
         }
         throw new IllegalArgumentException();
     }
-
 
 
     public static class AscendingTrendStrategy implements TrendDetectingStrategy {
@@ -50,7 +52,7 @@ public class Strategies {
                 DatasetItem firstItem;
                 DatasetItem secondItem;
 
-                for (int i = 0; i < candidate.size()-1; i++) {
+                for (int i = 0; i < candidate.size() - 1; i++) {
 
                     firstItem = candidate.get(i);
                     secondItem = candidate.get(i + 1);
@@ -82,7 +84,7 @@ public class Strategies {
                 DatasetItem firstItem;
                 DatasetItem secondItem;
 
-                for (int i = 0; i < candidate.size()-1; i++) {
+                for (int i = 0; i < candidate.size() - 1; i++) {
 
                     firstItem = candidate.get(i);
                     secondItem = candidate.get(i + 1);
@@ -107,9 +109,10 @@ public class Strategies {
 
         double treshold;
 
-        GreaterThanStrategy(double treshold){
+        GreaterThanStrategy(double treshold) {
             this.treshold = treshold;
         }
+
         @Override
         public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
 
@@ -120,11 +123,11 @@ public class Strategies {
 
                 DatasetItem item;
 
-                for (int i = 0; i < candidate.size()-1; i++) {
+                for (int i = 0; i < candidate.size() - 1; i++) {
 
                     item = candidate.get(i);
 
-                    if (Double.compare(item.getValues().get(columnId),treshold)!=1) {
+                    if (Double.compare(item.getValues().get(columnId), treshold) != 1) {
                         return false;
                     }
                 }
@@ -143,9 +146,10 @@ public class Strategies {
 
         double treshold;
 
-        LessThanStrategy(double treshold){
+        LessThanStrategy(double treshold) {
             this.treshold = treshold;
         }
+
         @Override
         public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
 
@@ -156,11 +160,11 @@ public class Strategies {
 
                 DatasetItem item;
 
-                for (int i = 0; i < candidate.size()-1; i++) {
+                for (int i = 0; i < candidate.size() - 1; i++) {
 
                     item = candidate.get(i);
 
-                    if (Double.compare(item.getValues().get(columnId),treshold)!=-1) {
+                    if (Double.compare(item.getValues().get(columnId), treshold) != -1) {
                         return false;
                     }
                 }
@@ -179,9 +183,10 @@ public class Strategies {
 
         double treshold;
 
-        EqualsStrategy(double treshold){
+        EqualsStrategy(double treshold) {
             this.treshold = treshold;
         }
+
         @Override
         public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
 
@@ -192,11 +197,11 @@ public class Strategies {
 
                 DatasetItem item;
 
-                for (int i = 0; i < candidate.size()-1; i++) {
+                for (int i = 0; i < candidate.size() - 1; i++) {
 
                     item = candidate.get(i);
 
-                    if (Double.compare(item.getValues().get(columnId),treshold)!=0) {
+                    if (Double.compare(item.getValues().get(columnId), treshold) != 0) {
                         return false;
                     }
                 }
