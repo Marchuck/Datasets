@@ -83,4 +83,21 @@ public class CSVReader<T> {
             return new DatasetItem(date.getTime(), doubles);
         }
     }
+
+
+    public static class DataSetOnlyDoubleItemStrategy implements ReadStrategy<DatasetItem> {
+        @Override
+        public DatasetItem createNewRow(String line) throws ParseException {
+            String[] all = line.split(",");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("\"dd/MM/yyyy\"");
+            Date date = dateFormat.parse(all[0]);
+            List<Double> doubles = new ArrayList<>();
+
+
+            doubles.add((double) all[1].hashCode());
+            doubles.add(Double.parseDouble(all[4].replaceAll("\"","")));
+
+            return new DatasetItem(date.getTime(), doubles);
+        }
+    }
 }

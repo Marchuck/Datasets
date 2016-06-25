@@ -20,5 +20,6 @@
     </orderEntry>
     <orderEntry type="library" name="weka" level="project" />
     <orderEntry type="library" name="JGoodies Forms" level="project" />
+    <orderEntry type="library" name="weka" level="project" />
   </component>
 </module>
