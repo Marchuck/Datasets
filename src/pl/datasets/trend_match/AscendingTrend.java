@@ -30,7 +30,6 @@ public class AscendingTrend extends TrendingSubsetWrapper {
         printAttemptData(trendCandidate);
 
         if (trendCandidate.size() == 1) {
-
             return true;
         } else if (trendCandidate.size() > 1) {
 
@@ -42,7 +41,7 @@ public class AscendingTrend extends TrendingSubsetWrapper {
                 firstItem = trendCandidate.get(i);
                 secondItem = trendCandidate.get(i + 1);
 
-                if (secondItem.getValues().get(0) <= firstItem.getValues().get(0)) {
+                if (secondItem.getValues().get(1) <= firstItem.getValues().get(1)) {
                     return false;
                 }
             }
