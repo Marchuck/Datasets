@@ -8,7 +8,7 @@ import java.util.List;
  * Created by JOHANNES on 5/29/2016.
  */
 public class DatasetItem {
-
+    private List<String> properties = new ArrayList<>();
     private long timestamp;
     private List<Double> values = new ArrayList<>();
 
@@ -16,7 +16,6 @@ public class DatasetItem {
         this.timestamp = timestamp;
         this.values = values;
     }
-
     public DatasetItem(long timestamp, Double value) {
         this.timestamp = timestamp;
 
@@ -28,6 +27,14 @@ public class DatasetItem {
         for (int j = 0; j < doubles.size(); j++)
             doubles1[j] = doubles.get(j);
         return doubles1;
+    }
+
+    public List<String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<String> properties) {
+        this.properties = properties;
     }
 
     public long getTimestamp() {

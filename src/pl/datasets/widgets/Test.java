@@ -1,11 +1,11 @@
 package pl.datasets.widgets;
 
+import pl.datasets.utils.Utils;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * @author Lukasz
@@ -48,18 +48,21 @@ public class Test {
     }
 
     private void test() {
-        List<String> data = new ArrayList<>();
-        data.add("A");
-        data.add("B");
-        data.add("C");
-        data.add("D");
-        data.add("E");
-        data.add("F");
-        data.add("G");
-        data.add("H");
-        data.add("I");
-        List<String> subList = data.subList(2, 5);
-        for (String s : subList) System.out.println(s);
+        String a = "AAAAAAAAAAAAAAAAAAAAA";
+        String[] aa = a.split("");
+        Utils.log(Arrays.toString(aa));
+//        List<String> data = new ArrayList<>();
+//        data.add("A");
+//        data.add("B");
+//        data.add("C");
+//        data.add("D");
+//        data.add("E");
+//        data.add("F");
+//        data.add("G");
+//        data.add("H");
+//        data.add("I");
+//        List<String> subList = data.subList(2, 5);
+//        for (String s : subList) System.out.println(s);
     }
 
 }

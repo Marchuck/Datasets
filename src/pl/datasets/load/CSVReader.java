@@ -2,8 +2,8 @@ package pl.datasets.load;
 
 import com.sun.javafx.beans.annotations.NonNull;
 import pl.datasets.Item;
-import pl.datasets.interfaces.Rangeable;
 import pl.datasets.interfaces.ReadStrategy;
+import pl.datasets.interfaces.SubsetStrategy;
 import pl.datasets.interfaces.UnSafeReadStrategy;
 import pl.datasets.model.BaseItem;
 import pl.datasets.model.DatasetItem;
@@ -13,10 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @author Lukasz
@@ -31,6 +28,20 @@ public class CSVReader<T> {
     };
     private boolean shouldSkipFirstLine;
     private String firstLine;
+
+    public static double[] wrap(List<Double> doubles) {
+        double[] doubles1 = new double[doubles.size()];
+        for (int j = 0; j < doubles.size(); j++)
+            doubles1[j] = doubles.get(j);
+        return doubles1;
+    }
+
+    public static String[] wrapStrings(List<String> strings) {
+        String[] strings1 = new String[strings.size()];
+        for (int j = 0; j < strings.size(); j++)
+            strings1[j] = strings.get(j);
+        return strings1;
+    }
 
     public CSVReader<T> skipFirstLine() {
         shouldSkipFirstLine = true;
@@ -66,7 +77,6 @@ public class CSVReader<T> {
         return list;
     }
 
-
     public List<T> readDataset(File file, @NonNull UnSafeReadStrategy<T> strategy) {
         List<T> list = new ArrayList<>();
         Scanner input = null;
@@ -99,7 +109,6 @@ public class CSVReader<T> {
         return list;
     }
 
-
     public String[] properties() {
         return firstLine.split(",");
     }
@@ -121,7 +130,6 @@ public class CSVReader<T> {
         }
     }
 
-
     public static class DataSetOnlyDoubleItemStrategy implements ReadStrategy<DatasetItem> {
         @Override
         public DatasetItem createNewRow(String line) throws ParseException {
@@ -138,15 +146,42 @@ public class CSVReader<T> {
         }
     }
 
-    public static class DataSetWeatherStrategy implements UnSafeReadStrategy<BaseItem>, Rangeable {
+    public static class PollutantStrategy implements SubsetStrategy {
+        @Override
+        public BaseItem createNewRow(String line) {
+            String[] all = line.split(",");
+            List<Double> doubles = new ArrayList<>();
+
+            doubles.add((double) all[1].hashCode());
+            doubles.add(Double.parseDouble(all[4].replaceAll("\"", "")));
+
+            return new BaseItem(doubles);
+        }
+
+        @Override
+        public List<String> getProperties() {
+            List<String> l = new ArrayList<>();
+//            "Date","Main Pollutant","Site Name","Site ID"," AQI Value"
+            l.add("Main_Pollutant");
+            l.add("AQI_Value");
+            return l;
+        }
+    }
+
+    public static class DataSetWeatherStrategy implements SubsetStrategy {
+        private String base;
+
+        public DataSetWeatherStrategy(String base) {
+            this.base = base;
+        }
+
+        public DataSetWeatherStrategy() {
+            this("");
+        }
 
         @Override
         public BaseItem createNewRow(String line) {
             String[] all = line.split(",");
-            //SF15,"Warnerville Switchyard, Oakdale",
-            // "Warnerville",5,2016-01-6? 01:45,
-            // 0,0,0,0,0.046
-
             List<Double> doubles = new ArrayList<>();
             doubles.add(Double.parseDouble(all[6]));
             doubles.add(Double.parseDouble(all[7]));
@@ -157,28 +192,18 @@ public class CSVReader<T> {
         }
 
         @Override
-        public int getFromIndex() {
-            return 6;
-        }
-
-        @Override
-        public int getToIndex() {
-            return 9 + 1;//must be 10 +1(subList works exclusive for last element)
+        public List<String> getProperties() {
+            List<String> list = new ArrayList<>();
+            list.add(base.concat("Wind_Velocity_Mtr_Sec"));
+            list.add(base.concat("Wind_Direction_Variance_Deg"));
+            list.add(base.concat("Wind_Direction_Deg"));
+            list.add(base.concat("Ambient_Temperature_Deg_C"));
+            return list;
         }
     }
 
-    public static class IstambulStrategy implements UnSafeReadStrategy<BaseItem>, Rangeable {
+    public static class IstambulStrategy implements SubsetStrategy {
         private int index = 0;
-
-        @Override
-        public int getFromIndex() {
-            return 1;
-        }
-
-        @Override
-        public int getToIndex() {
-            return 9;//must be 9 +1(subList works exclusive for last element)
-        }
 
         @Override
         public BaseItem createNewRow(String line) {
@@ -190,34 +215,76 @@ public class CSVReader<T> {
             ++index;
             return new BaseItem(doubles);
         }
+
+        @Override
+        public List<String> getProperties() {
+            List<String> l = new ArrayList<>();
+            l.addAll(Arrays.asList(("ISE1;ISE2;SP;DAX;FTSE;NIKKEI;BOVESPA;EU;EM").split(";")));
+            return l;
+        }
     }
 
-    public static class IslandStrategy implements UnSafeReadStrategy<BaseItem>, Rangeable {
+    public static class NFLWeatherStrategy implements SubsetStrategy {
 
-        @Override
-        public int getFromIndex() {
-            return 2;
-        }
-
-        @Override
-        public int getToIndex() {
-            return 9;
-        }
 
         @Override
         public BaseItem createNewRow(String line) {
-//            "Month";"??ey";"Akureyri";"Dalatangi";"Gr?mssta?ir";"Keflav?k airport";"Kirkjub?jarklaustur";"Reykjav?k";"St?rh?f?i Westman Islands";"Stykkish?lmur"
-//            "1949-01"; ;5.2;   53.2;2.5;;19.4;9.6;15;12.9
+            //id,home_team,home_score,away_team,away_score,temperature,wind_chill,humidity,wind_mph,weather,date
+//            196009230ram,Los Angeles Rams,21,St. Louis Cardinals,43,66,,78%,8,66 degrees- relative humidity 78%- wind 8 mph,9/23/1960
+//            196009240dal,Dallas Cowboys,28,Pittsburgh Steelers,35,72,,80%,16,72 degrees- relative humidity 80%- wind 16 mph,9/24/1960
+            String[] s = line.split(",");
+            List<Double> doubles = new ArrayList<>();
+            doubles.add(Double.parseDouble(s[2]));
+            doubles.add(Double.parseDouble(s[4]));
+            doubles.add(Double.parseDouble(s[5]));
+            doubles.add(Double.parseDouble(s[7].replace("%", "")));
+            doubles.add(Double.parseDouble(s[8]));
+            doubles.add(Double.parseDouble(s[9].substring(0, 2).trim()));
+            doubles.add(Double.parseDouble(s[9].split("humidity ")[0].substring(0, 2)));
+            doubles.add(Double.parseDouble(s[9].split("wind ")[0].substring(0, 2)));
+            return new BaseItem(doubles);
+        }
+
+        @Override
+        public List<String> getProperties() {
+            List<String> l = new ArrayList<>();
+            l.add("home_score");
+            l.add("away_score");
+            l.add("temperature");
+            l.add("wind_chill");
+
+            l.add("wind_mph");
+            l.add("weather_temp");
+            l.add("weather_humidity");
+            l.add("weather_wind");
+
+            return l;
+        }
+    }
+
+    public static class IslandStrategy implements SubsetStrategy {
+
+
+        @Override
+        public BaseItem createNewRow(String line) {
             String[] strings = line.split(";");
 
             List<Double> doubles = new ArrayList<>();
             int index = 1;
             while (index < strings.length) {
-                if (!strings[index].trim().isEmpty()) doubles.add(Double.parseDouble(strings[index]));
+                if (!strings[index].trim().isEmpty()) doubles.add(Double.parseDouble(strings[index].replace(",", ".")));
                 index++;
             }
-
             return new BaseItem(doubles);
         }
+
+        @Override
+        public List<String> getProperties() {
+            String[] s = "\"??ey\";\"Akureyri\";\"Dalatangi\";\"Gr?mssta?ir\";\"Keflav?k airport\";\"Kirkjub?jarklaustur\";\"Reykjav?k\";\"St?rh?f?i Westman Islands\";\"Stykkish?lmur\"".split(";");
+            List<String> l = new ArrayList<>();
+            for (String x : s) l.add(x.replaceAll("\"", ""));
+            return l;
+        }
     }
+
 }

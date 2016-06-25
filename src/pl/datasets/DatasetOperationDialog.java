@@ -1,13 +1,11 @@
 package pl.datasets;
 
-import pl.datasets.interfaces.TrendDetectingStrategy;
+import pl.datasets.interfaces.SubsetStrategy;
 import pl.datasets.load.CSVReader;
 import pl.datasets.model.BaseItem;
-import pl.datasets.model.ColumnStrategyPair;
 import pl.datasets.model.DatasetItem;
-import pl.datasets.utils.Strategies;
+import pl.datasets.trend_match.AscendingTrend;
 import pl.datasets.utils.Utils;
-import pl.datasets.trend_match.TrendingSubsetWrapper;
 
 import java.io.File;
 import java.text.ParseException;
@@ -47,17 +45,7 @@ public class DatasetOperationDialog {
     }
 
     public static void main(String[] args) {
-
-        List<DatasetItem> data =  new DatasetOperationDialog(true).getFulldataset(true);
-
-        TrendingSubsetWrapper trend = TrendingSubsetWrapper.getInstance(data);
-
-        List<ColumnStrategyPair> columnStrategyPairs = new ArrayList<>();
-        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("++"),0));
-        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("--"),2));
-        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy(">",20),1));
-
-        trend.getTrends(columnStrategyPairs);
+        List<DatasetItem> set = new DatasetOperationDialog(true).getFulldataset(true);
 
     }
 
@@ -71,11 +59,44 @@ public class DatasetOperationDialog {
         Utils.log("createAllSublists");
         List<List<BaseItem>> readyToMerge = new ArrayList<>();
 
-        readyToMerge.add(createWeatherSubset());
-        readyToMerge.add(createIstambuleSubset());
-        readyToMerge.add(createReykjavikSubset());
+        readyToMerge.add(subsetOf("data/weather/SF04.csv", new CSVReader.DataSetWeatherStrategy("SF04")));
+        readyToMerge.add(subsetOf("data/stock_exchange/istambul.csv", new CSVReader.IslandStrategy()));
+        readyToMerge.add(subsetOf("data/island/reykjavik.csv", new CSVReader.IslandStrategy()));
+        readyToMerge.add(subsetOf("data/ad_viz_tile_data.csv", new CSVReader.PollutantStrategy()));
 
         return readyToMerge;
+    }
+
+    private List<BaseItem> subsetOf(String fileName, SubsetStrategy strategy) {
+        CSVReader<BaseItem> csvReader = new CSVReader<>();
+        List<BaseItem> dataSet;
+
+        File file = new File(fileName);
+
+        dataSet = csvReader.skipFirstLine().readDataset(file, strategy);
+        List<String> properties = strategy.getProperties();
+
+        for (BaseItem baseItem : dataSet) {
+            baseItem.setColumnNames(properties);
+        }
+        return dataSet;
+
+    }
+
+    private List<BaseItem> createNflWeatherSubset() {
+        CSVReader<BaseItem> csvReader = new CSVReader<>();
+        List<BaseItem> dataSet;
+
+        File file = new File("data/nfl/nfl_weather.csv");
+        CSVReader.NFLWeatherStrategy strategy = new CSVReader.NFLWeatherStrategy();
+
+        dataSet = csvReader.skipFirstLine().readDataset(file, strategy);
+        List<String> properties = strategy.getProperties();
+
+        for (BaseItem baseItem : dataSet) {
+            baseItem.setColumnNames(properties);
+        }
+        return dataSet;
     }
 
     private List<BaseItem> createReykjavikSubset() {
@@ -86,7 +107,7 @@ public class DatasetOperationDialog {
         CSVReader.IslandStrategy strategy = new CSVReader.IslandStrategy();
 
         dataSet = csvReader.skipFirstLine().readDataset(file, strategy);
-        List<String> properties = Arrays.asList(csvReader.properties(";"));
+        List<String> properties = strategy.getProperties();
 
         for (BaseItem baseItem : dataSet) {
             baseItem.setColumnNames(properties);
@@ -102,10 +123,8 @@ public class DatasetOperationDialog {
 
         dataSet = csvReader.skipFirstLine().readDataset(file, strategy);
 
-        List<String> properties = Arrays.asList(csvReader.properties());
-
         for (BaseItem baseItem : dataSet) {
-            baseItem.setColumnNames(properties.subList(strategy.getFromIndex(), strategy.getToIndex()));
+            baseItem.setColumnNames((strategy.getProperties()));
         }
         return dataSet;
     }
@@ -118,8 +137,7 @@ public class DatasetOperationDialog {
         CSVReader.IstambulStrategy strategy = new CSVReader.IstambulStrategy();
 
         dataSet = csvReader.skipFirstLine().readDataset(file, strategy);
-        List<String> properties = Arrays.asList(csvReader.properties(";"));
-        List<String> columnNames = properties.subList(strategy.getFromIndex(), strategy.getToIndex());
+        List<String> columnNames = strategy.getProperties();
         for (BaseItem baseItem : dataSet) {
             baseItem.setColumnNames(columnNames);
         }
@@ -128,7 +146,8 @@ public class DatasetOperationDialog {
 
     private void initAscendingTrendRecognition(List<DatasetItem> dataset) {
 
-
+        AscendingTrend trend = AscendingTrend.getInstance(dataset);
+        trend.getTrends();
 
     }
 
@@ -139,21 +158,27 @@ public class DatasetOperationDialog {
         for (int j = 0; j < minSize; j++) {
             List<Double> doubles = new ArrayList<>();
             for (List<BaseItem> baseItem : sets) {
+
                 doubles.addAll(baseItem.get(j).getValues());
             }
             dataset.add(new DatasetItem(j, doubles));
         }
+
+        List<String> propertyNames = new ArrayList<>();
+        propertyNames.add("Timestamp");
+        for (List<BaseItem> differentSource : sets) {
+            propertyNames.addAll(differentSource.get(0).getColumnNames());
+        }
+
+        for (DatasetItem aDataset : dataset) aDataset.setProperties(propertyNames);
+
         if (verbose) {
             Utils.log("DONE");
+            Utils.log(Arrays.toString(CSVReader.wrapStrings(dataset.get(0).getProperties())));
             for (DatasetItem it : dataset) {
                 Utils.log(it.toString());
             }
-
         }
         return dataset;
     }
-
-
-
-
 }
