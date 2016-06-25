@@ -1,7 +1,5 @@
 package pl.datasets.utils;
 
-import pl.datasets.model.DatasetItem;
-
 /**
  * @author Lukasz
  * @since 23.06.2016.

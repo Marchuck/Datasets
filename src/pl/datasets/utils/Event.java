@@ -10,15 +10,18 @@ import java.io.Serializable;
  */
 public class Event implements Serializable {
     public TrendDetectingStrategy strategy;
-    public double treshold;
     public int columnIndex;
 
     public Event() {
     }
 
-    public Event(TrendDetectingStrategy strategy, double treshold, int columnIndex) {
+    public Event(TrendDetectingStrategy strategy, int columnIndex) {
         this.strategy = strategy;
-        this.treshold = treshold;
         this.columnIndex = columnIndex;
+    }
+
+    @Override
+    public String toString() {
+        return "strategy: " + strategy + ", columnIndex: " + columnIndex;
     }
 }

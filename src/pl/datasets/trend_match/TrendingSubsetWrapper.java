@@ -20,6 +20,16 @@ public class TrendingSubsetWrapper {
 
     private int minTrendLength = 2;
 
+    private TrendingSubsetWrapper(List<DatasetItem> dataset) {
+        this.dataset = dataset;
+
+        printDatasetSummary(dataset);
+    }
+
+    public static TrendingSubsetWrapper getInstance(List<DatasetItem> dataset) {
+        return new TrendingSubsetWrapper(dataset);
+    }
+
     /**
      * Set minimal length of the searched trend
      *
@@ -27,17 +37,6 @@ public class TrendingSubsetWrapper {
      */
     void setMinTrendLength(int minTrendLength) {
         this.minTrendLength = minTrendLength;
-    }
-
-    public static TrendingSubsetWrapper getInstance(List<DatasetItem> dataset){
-        return new TrendingSubsetWrapper(dataset);
-    }
-
-
-    private TrendingSubsetWrapper(List<DatasetItem> dataset) {
-        this.dataset = dataset;
-
-        printDatasetSummary(dataset);
     }
 
     private void printDatasetSummary(List<DatasetItem> dataset) {
@@ -98,12 +97,10 @@ public class TrendingSubsetWrapper {
     }
 
 
+    public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<ColumnStrategyPair> columnStrategyPairs) {
 
-
-    public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<ColumnStrategyPair> columnStrategyPairs){
-
-        for (ColumnStrategyPair pair: columnStrategyPairs){
-            if (!pair.getStrategy().hasTrend(trendCandidate,pair.getColumnId())){
+        for (ColumnStrategyPair pair : columnStrategyPairs) {
+            if (!pair.getStrategy().hasTrend(trendCandidate, pair.getColumnId())) {
                 return false;
             }
         }

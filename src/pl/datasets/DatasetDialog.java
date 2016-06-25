@@ -23,14 +23,17 @@ public class DatasetDialog extends JFrame {
     private JButton addButton;
     private JPanel current_entry;
     private String[] properties;
+    private String[] operations;
+
     private List<DatasetItem> items;
     private Spinners spinnersDialog = new Spinners();
     private Color[] colors = new Color[]{Color.cyan, Color.yellow, Color.green, Color.orange, Color.pink, Color.lightGray};
 
-    public DatasetDialog(String path, List<DatasetItem> items, String[] properyNames) {
+    public DatasetDialog(String path, List<DatasetItem> items, String[] properyNames, String[] operations) {
         super(path);
         setContentPane(panel1);
         this.items = items;
+        this.operations = operations;
         properties = getAttributeNames(properyNames);
 //        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         pack();
@@ -43,7 +46,7 @@ public class DatasetDialog extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                spinnersDialog.display(addButton, properties, new Caller<Event>() {
+                spinnersDialog.display(addButton, properties, operations, new Caller<Event>() {
                     @Override
                     public void call(Event event) {
                         Utils.log(event.toString());

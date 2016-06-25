@@ -1,7 +1,5 @@
 package pl.datasets.utils;
 
-import pl.datasets.model.DatasetItem;
-
 import java.io.Serializable;
 
 /**

@@ -7,7 +7,7 @@ package pl.datasets.widgets;
 
 import pl.datasets.model.StringComboBoxModel;
 import pl.datasets.utils.Event;
-import pl.datasets.utils.Operations;
+import pl.datasets.utils.Strategies;
 import pl.datasets.utils.Utils;
 
 import javax.swing.*;
@@ -22,6 +22,8 @@ import java.awt.event.ItemListener;
 public class Spinners extends JPanel {
 
     private Event currentEvent = new Event();
+    private String currentStrategyName = "";
+    private double currentThreshold;
 
     /**
      * DateFormatSymbols returns an extra, empty value at the
@@ -103,7 +105,7 @@ public class Spinners extends JPanel {
         });
     }
 
-    public void display(JComponent parent, String[] propertiesToSelect, final Caller<Event> eventCallable) {
+    public void display(JComponent parent, String[] propertiesToSelect, String[] operations, final Caller<Event> eventCallable) {
         //main dialog
         final JDialog mainDialog = new JDialog();
         //main layout
@@ -127,7 +129,7 @@ public class Spinners extends JPanel {
             }
         });
 
-        ComboBoxModel<String> comboOperationsModel = new StringComboBoxModel(new String[]{"[]", "#", "~", "-", "<>"});
+        ComboBoxModel<String> comboOperationsModel = new StringComboBoxModel(operations);
         final JComboBox<String> comboOperation = addCombobox("Operation", comboOperationsModel, rootPanel);
 
         comboOperation.setMinimumSize(new Dimension(50, 15));
@@ -135,8 +137,8 @@ public class Spinners extends JPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 Utils.log("itemStateChanged(" + e.getItem() + ")");
-               /* currentEvent.operation = Operations.match(e.getItem());
-                currentEvent.operationName = (String) e.getItem();*/
+                currentStrategyName = (String) e.getItem();
+                currentEvent.strategy = Strategies.recognizeStrategy((String) e.getItem(), 22);
             }
         });
 
@@ -146,15 +148,19 @@ public class Spinners extends JPanel {
             @Override
             public void stateChanged(ChangeEvent e) {
                 Utils.log("onChanged " + spinnerValue.getModel().getValue());
-               /* if (spinnerValue.getModel() instanceof SpinnerNumberModel) {
-                    currentEvent.value = ((Double) spinnerValue.getModel().getValue());
-                } else currentEvent.value = -1;*/
+                if (spinnerValue.getModel() instanceof SpinnerNumberModel) {
+                    currentThreshold = ((Double) spinnerValue.getModel().getValue());
+
+                } else currentThreshold = -1;
             }
         });
         JButton jbutton = new JButton("Add");
         jbutton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                currentEvent.strategy = Strategies.recognizeStrategy(currentStrategyName, currentThreshold);
                 eventCallable.call(currentEvent);
                 mainDialog.setVisible(false);
             }

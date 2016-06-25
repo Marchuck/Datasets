@@ -1,14 +1,16 @@
 package pl.datasets;
 
+import pl.datasets.interfaces.TrendDetectingStrategy;
 import pl.datasets.interfaces.SubsetStrategy;
 import pl.datasets.load.CSVReader;
 import pl.datasets.model.BaseItem;
+import pl.datasets.model.ColumnStrategyPair;
 import pl.datasets.model.DatasetItem;
-import pl.datasets.trend_match.AscendingTrend;
+import pl.datasets.utils.Strategies;
 import pl.datasets.utils.Utils;
+import pl.datasets.trend_match.TrendingSubsetWrapper;
 
 import java.io.File;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,33 +21,39 @@ import java.util.List;
  * @since 26.05.2016.
  */
 public class DatasetOperationDialog {
+    private List<ColumnStrategyPair> columnStrategyPairs = new ArrayList<>();
 
-    DatasetDialog dialog;
+    private DatasetDialog dialog;
 
-    public DatasetOperationDialog() {
-        this(new File("data/ad_viz_tile_data.csv"));
-    }
 
     public DatasetOperationDialog(boolean b) {
         //no-op
     }
 
-    public DatasetOperationDialog(File file) {
-        CSVReader<DatasetItem> csvReader = new CSVReader<>();
-        List<DatasetItem> dataset;
-        try {
-            dataset = csvReader.skipFirstLine().readFile(file, new CSVReader.DataSetOnlyDoubleItemStrategy());
-            initAscendingTrendRecognition(dataset);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Data set reading fatal error");
-        }
+    public DatasetOperationDialog() {
+        List<DatasetItem> dataset = getFulldataset(true);
+        String[] properties = CSVReader.wrapStrings(dataset.get(0).getProperties());
 
-        dialog = new DatasetDialog(file.getAbsolutePath(), dataset, csvReader.properties());
+        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("++"), 0));
+        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("--"), 2));
+        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy(">", 20), 1));
+
+        dialog = new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">"});
     }
 
+
     public static void main(String[] args) {
-        List<DatasetItem> set = new DatasetOperationDialog(true).getFulldataset(true);
+        new DatasetOperationDialog();
+//        List<DatasetItem> data = new DatasetOperationDialog(true).getFulldataset(true);
+//
+//        TrendingSubsetWrapper trend = TrendingSubsetWrapper.getInstance(data);
+//
+//        List<ColumnStrategyPair> columnStrategyPairs = new ArrayList<>();
+//        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("++"), 0));
+//        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("--"), 2));
+//        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy(">", 20), 1));
+//
+//        trend.getTrends(columnStrategyPairs);
 
     }
 
@@ -146,9 +154,6 @@ public class DatasetOperationDialog {
 
     private void initAscendingTrendRecognition(List<DatasetItem> dataset) {
 
-        AscendingTrend trend = AscendingTrend.getInstance(dataset);
-        trend.getTrends();
-
     }
 
     public List<DatasetItem> getFulldataset(boolean verbose) {
@@ -181,4 +186,6 @@ public class DatasetOperationDialog {
         }
         return dataset;
     }
+
+
 }

@@ -7,7 +7,21 @@ import java.util.List;
 /**
  * Created by JOHANNES on 6/25/2016.
  */
-public interface TrendDetectingStrategy {
-    boolean hasTrend(List<DatasetItem> candidate, Integer columnId);
-    String getName();
+public abstract class TrendDetectingStrategy {
+    private String name;
+
+    public TrendDetectingStrategy(String name) {
+        this.name = name;
+    }
+
+    public abstract boolean hasTrend(List<DatasetItem> candidate, Integer columnId);
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

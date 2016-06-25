@@ -10,24 +10,18 @@ import java.util.List;
  */
 public class Strategies {
 
-    public static TrendDetectingStrategy recognizeStrategy(String pattern) throws IllegalArgumentException  {
+
+    public static TrendDetectingStrategy recognizeStrategy(String pattern) throws IllegalArgumentException {
+        return recognizeStrategy(pattern, -1);
+    }
+
+    public static TrendDetectingStrategy recognizeStrategy(String pattern, double treshold) throws IllegalArgumentException {
         switch (pattern) {
 
             case "++":
                 return new AscendingTrendStrategy();
             case "--":
                 return new DescendingTrendStrategy();
-            case ">":
-            case "<":
-            case "==":
-                throw new IllegalArgumentException("Treshold not set");
-        }
-        throw new IllegalArgumentException("Invalid operator");
-    }
-
-
-    public static TrendDetectingStrategy recognizeStrategy(String pattern, double treshold) throws IllegalArgumentException {
-        switch (pattern) {
 
             case ">":
                 return new GreaterThanStrategy(treshold);
@@ -40,7 +34,39 @@ public class Strategies {
     }
 
 
-    public static class AscendingTrendStrategy implements TrendDetectingStrategy {
+    public static class AscendingTrendStrategy extends TrendDetectingStrategy {
+        public AscendingTrendStrategy() {
+            super("Ascending");
+        }
+        @Override
+        public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
+
+            if (candidate.size() == 1) {
+                return true;
+            } else if (candidate.size() > 1) {
+
+                DatasetItem firstItem;
+                DatasetItem secondItem;
+
+                for (int i = 0; i < candidate.size() - 1; i++) {
+
+                    firstItem = candidate.get(i);
+                    secondItem = candidate.get(i + 1);
+
+                    if (secondItem.getValues().get(columnId) <= firstItem.getValues().get(columnId)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+
+        }
+    }
+
+    public static class DescendingTrendStrategy extends TrendDetectingStrategy {
+        public DescendingTrendStrategy() {
+            super("Descending");
+        }
 
         @Override
         public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
@@ -65,51 +91,15 @@ public class Strategies {
             return true;
 
         }
-
-        @Override
-        public String getName() {
-            return "Ascending";
-        }
-    }
-
-    public static class DescendingTrendStrategy implements TrendDetectingStrategy {
-
-        @Override
-        public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
-
-            if (candidate.size() == 1) {
-                return true;
-            } else if (candidate.size() > 1) {
-
-                DatasetItem firstItem;
-                DatasetItem secondItem;
-
-                for (int i = 0; i < candidate.size() - 1; i++) {
-
-                    firstItem = candidate.get(i);
-                    secondItem = candidate.get(i + 1);
-
-                    if (secondItem.getValues().get(columnId) <= firstItem.getValues().get(columnId)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-
-        }
-
-        @Override
-        public String getName() {
-            return "Ascending";
-        }
     }
 
 
-    public static class GreaterThanStrategy implements TrendDetectingStrategy {
+    public static class GreaterThanStrategy extends TrendDetectingStrategy {
 
         double treshold;
 
         GreaterThanStrategy(double treshold) {
+            super("Greater than");
             this.treshold = treshold;
         }
 
@@ -135,18 +125,14 @@ public class Strategies {
             return true;
 
         }
-
-        @Override
-        public String getName() {
-            return "GreaterThan";
-        }
     }
 
-    public static class LessThanStrategy implements TrendDetectingStrategy {
+    public static class LessThanStrategy extends TrendDetectingStrategy {
 
         double treshold;
 
         LessThanStrategy(double treshold) {
+            super("Less than");
             this.treshold = treshold;
         }
 
@@ -172,18 +158,14 @@ public class Strategies {
             return true;
 
         }
-
-        @Override
-        public String getName() {
-            return "GreaterThan";
-        }
     }
 
-    public static class EqualsStrategy implements TrendDetectingStrategy {
+    public static class EqualsStrategy extends TrendDetectingStrategy {
 
         double treshold;
 
         EqualsStrategy(double treshold) {
+            super("Equals");
             this.treshold = treshold;
         }
 
@@ -208,11 +190,6 @@ public class Strategies {
             }
             return true;
 
-        }
-
-        @Override
-        public String getName() {
-            return "GreaterThan";
         }
     }
 
