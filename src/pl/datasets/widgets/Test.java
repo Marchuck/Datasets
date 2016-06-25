@@ -4,11 +4,18 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Lukasz
  * @since 23.06.2016.
  */
 public class Test {
+    public static void main(String[] args) {
+        new Test().test();
+    }
+
     public void fo2() {
 
     }
@@ -38,6 +45,21 @@ public class Test {
             }
         });
 
+    }
+
+    private void test() {
+        List<String> data = new ArrayList<>();
+        data.add("A");
+        data.add("B");
+        data.add("C");
+        data.add("D");
+        data.add("E");
+        data.add("F");
+        data.add("G");
+        data.add("H");
+        data.add("I");
+        List<String> subList = data.subList(2, 5);
+        for (String s : subList) System.out.println(s);
     }
 
 }
