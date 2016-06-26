@@ -1,6 +1,5 @@
 package pl.datasets.trend_match;
 
-import pl.datasets.model.ColumnStrategyPair;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
@@ -33,16 +32,7 @@ public class TrendingSubsetWrapper {
         return new TrendingSubsetWrapper(dataset);
     }
 
-    public static List<ColumnStrategyPair> wrap(List<Event> events) {
-        Utils.log(TAG + "_wrap");
-        List<ColumnStrategyPair> l = new ArrayList<>();
-        for (Event e : events) l.add(wrap(e));
-        return l;
-    }
 
-    private static ColumnStrategyPair wrap(Event e) {
-        return new ColumnStrategyPair(e.strategy, e.columnIndex);
-    }
 
     /**
      * Set minimal length of the searched trend
@@ -64,7 +54,7 @@ public class TrendingSubsetWrapper {
         }
     }
 
-    public List<List<Long>> getTrends(List<ColumnStrategyPair> columnStrategyPairs) {
+    public List<List<Long>> getTrends(List<Event> columnStrategyPairs) {
         findTrends(columnStrategyPairs);
         if (null != trendsList && trendsList.size() > 0) {
 
@@ -82,7 +72,7 @@ public class TrendingSubsetWrapper {
         return trendsList;
     }
 
-    private void findTrends(List<ColumnStrategyPair> columnStrategyPairs) {
+    private void findTrends(List<Event> columnStrategyPairs) {
 
         for (DatasetItem item : dataset) {
 
@@ -110,10 +100,11 @@ public class TrendingSubsetWrapper {
         putTrendDelimiter();
     }
 
-    public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<ColumnStrategyPair> columnStrategyPairs) {
 
-        for (ColumnStrategyPair pair : columnStrategyPairs) {
-            if (!pair.getStrategy().hasTrend(trendCandidate, pair.getColumnId())) {
+    public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<Event> columnStrategyPairs) {
+
+        for (Event pair : columnStrategyPairs) {
+            if (!pair.getStrategy().hasTrend(trendCandidate, pair.getColumnIndex())) {
                 return false;
             }
         }

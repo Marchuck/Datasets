@@ -120,11 +120,11 @@ public class Spinners extends JPanel {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 Utils.log("itemStateChanged(" + e.getItem() + ")");
-                currentEvent.columnIndex = -1;
+                currentEvent.setColumnIndex(-1);
                 for (int j = 0; j < comboProperty.getModel().getSize(); j++) {
                     String ss = comboProperty.getModel().getElementAt(j);
                     if (ss.equalsIgnoreCase((String) e.getItem()))
-                        currentEvent.columnIndex = j;
+                        currentEvent.setColumnIndex(j);
                 }
             }
         });
@@ -138,7 +138,7 @@ public class Spinners extends JPanel {
             public void itemStateChanged(ItemEvent e) {
                 Utils.log("itemStateChanged(" + e.getItem() + ")");
                 currentStrategyName = (String) e.getItem();
-                currentEvent.strategy = Strategies.recognizeStrategy((String) e.getItem(), 22);
+                currentEvent.setStrategy(Strategies.recognizeStrategy((String) e.getItem(), 22));
             }
         });
 
@@ -160,7 +160,7 @@ public class Spinners extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                currentEvent.strategy = Strategies.recognizeStrategy(currentStrategyName, currentThreshold);
+                currentEvent.setStrategy(Strategies.recognizeStrategy(currentStrategyName, currentThreshold));
                 eventCallable.call(currentEvent);
                 mainDialog.setVisible(false);
             }

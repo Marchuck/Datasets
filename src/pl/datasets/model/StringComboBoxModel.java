@@ -13,6 +13,7 @@ public class StringComboBoxModel implements ComboBoxModel<String> {
     private String[] data;
     private String current;
 
+
     public StringComboBoxModel(String[] data) {
         this.data = data;
     }
