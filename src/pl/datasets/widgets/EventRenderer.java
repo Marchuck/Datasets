@@ -11,13 +11,22 @@ import java.awt.*;
  */
 public class EventRenderer implements ListCellRenderer<Event> {
 
-    final JLabel label = new JLabel();
+
+    private final JLabel label = new JLabel();
+    private String[] properties;
+
+    public EventRenderer() {
+    }
+
+    public EventRenderer(String[] properties) {
+        this.properties = properties;
+    }
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Event> list, Event selectedEvent,
                                                   int index, boolean isSelected, boolean cellHasFocus) {
 
-        label.setText(selectedEvent.toString());
+        label.setText(selectedEvent.eventName(properties));
 //        if (selectedEvent.isSelected == 0) label.setForeground(classBackground(selectedEvent));
 //        else if (selectedEvent.isSelected == 1) label.setForeground(Color.RED);
 //        else if (selectedEvent.isSelected == 2) label.setForeground(Color.GREEN);

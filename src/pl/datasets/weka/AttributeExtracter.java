@@ -7,7 +7,7 @@ import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
-import static pl.datasets.weka.ToNominal.wrap;
+import static pl.datasets.weka.ToNominal.prepared;
 
 /**
  * @author Lukasz
@@ -28,7 +28,7 @@ public class AttributeExtracter {
     public void extract() throws Exception {
 
         Instances instances = ConverterUtils.DataSource.read("data/ad_viz_tile_data.csv");
-        instances = wrap(instances );
+        instances = prepared(instances);
 
         if (instances.classIndex() == -1)
             instances.setClassIndex(instances.numAttributes() - 1);

@@ -17,19 +17,19 @@ public class ToNominal {
 
     public static Instances defaultInstances() throws Exception {
         Instances data = ConverterUtils.DataSource.read(DATASET1);
-        return wrap(data);
+        return prepared(data);
     }
 
     public static Instances get(String path) throws Exception {
         Instances data = ConverterUtils.DataSource.read(path);
-        return wrap(data);
+        return prepared(data);
     }
 
     public static Instances getPollutants() throws Exception {
         return get(POLLUTANTS);
     }
 
-    public static Instances wrap(Instances instances) throws Exception {
+    public static Instances prepared(Instances instances) throws Exception {
 
         NumericToNominal convert = new NumericToNominal();
         String[] options = new String[2];

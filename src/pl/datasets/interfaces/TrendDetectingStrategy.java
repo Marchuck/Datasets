@@ -16,6 +16,7 @@ public abstract class TrendDetectingStrategy {
 
     public abstract boolean hasTrend(List<DatasetItem> candidate, Integer columnId);
 
+    public abstract String getOptionalThreshold();
     public String getName() {
         return name;
     }

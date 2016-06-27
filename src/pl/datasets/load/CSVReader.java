@@ -36,7 +36,7 @@ public class CSVReader<T> {
         return doubles1;
     }
 
-    public static String[] wrapStrings(List<String> strings) {
+    public static String[] listToArray(List<String> strings) {
         String[] strings1 = new String[strings.size()];
         for (int j = 0; j < strings.size(); j++)
             strings1[j] = strings.get(j);
@@ -60,7 +60,7 @@ public class CSVReader<T> {
             while (input.hasNextLine()) {
                 //read next line
                 String nextLine = input.nextLine();
-                //save record as four variables
+                //save record saveAs four variables
                 if (shouldSkipFirstLine) {
                     firstLine = nextLine;
                     shouldSkipFirstLine = false;
@@ -85,7 +85,7 @@ public class CSVReader<T> {
             while (input.hasNextLine()) {
                 //read next line
                 String nextLine = input.nextLine();
-                //save record as four variables
+                //save record saveAs four variables
                 if (shouldSkipFirstLine) {
                     firstLine = nextLine;
                     shouldSkipFirstLine = false;
@@ -203,7 +203,6 @@ public class CSVReader<T> {
     }
 
     public static class IstambulStrategy implements SubsetStrategy {
-        private int index = 0;
 
         @Override
         public BaseItem createNewRow(String line) {
@@ -212,7 +211,6 @@ public class CSVReader<T> {
             for (int j = 1; j < items.length; j++) {
                 doubles.add(Double.parseDouble(items[j].replace(",", ".")));
             }
-            ++index;
             return new BaseItem(doubles);
         }
 
@@ -226,7 +224,6 @@ public class CSVReader<T> {
 
     public static class NFLWeatherStrategy implements SubsetStrategy {
 
-
         @Override
         public BaseItem createNewRow(String line) {
             //id,home_team,home_score,away_team,away_score,temperature,wind_chill,humidity,wind_mph,weather,date
@@ -237,8 +234,9 @@ public class CSVReader<T> {
             doubles.add(Double.parseDouble(s[2]));
             doubles.add(Double.parseDouble(s[4]));
             doubles.add(Double.parseDouble(s[5]));
-            doubles.add(Double.parseDouble(s[7].replace("%", "")));
-            doubles.add(Double.parseDouble(s[8]));
+            if (!s[6].isEmpty()) doubles.add(Double.parseDouble(s[6]));
+            else if (!s[7].isEmpty()) doubles.add(Double.parseDouble(s[7].replace("%", "")));
+            else if (!s[8].isEmpty()) doubles.add(Double.parseDouble(s[8]));
             doubles.add(Double.parseDouble(s[9].substring(0, 2).trim()));
             doubles.add(Double.parseDouble(s[9].split("humidity ")[0].substring(0, 2)));
             doubles.add(Double.parseDouble(s[9].split("wind ")[0].substring(0, 2)));
@@ -253,7 +251,7 @@ public class CSVReader<T> {
             l.add("temperature");
             l.add("wind_chill");
 
-            l.add("wind_mph");
+//            l.add("wind_mph");
             l.add("weather_temp");
             l.add("weather_humidity");
             l.add("weather_wind");

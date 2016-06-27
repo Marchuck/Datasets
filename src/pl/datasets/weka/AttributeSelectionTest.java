@@ -72,7 +72,7 @@ public class AttributeSelectionTest {
     }
 
     /**
-     * takes a dataset as first argument
+     * takes a dataset saveAs first argument
      *
      * @param args the commandline arguments
      * @throws Exception if something goes wrong
@@ -81,7 +81,7 @@ public class AttributeSelectionTest {
         // load data
         System.out.println("\n0. Loading data");
         DataSource source = new DataSource(ToNominal.DATASET1);
-        Instances data = ToNominal.wrap(source.getDataSet());
+        Instances data = ToNominal.prepared(source.getDataSet());
         if (data.classIndex() == -1)
             data.setClassIndex(data.numAttributes() - 1);
 

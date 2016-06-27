@@ -16,6 +16,7 @@ public class DatasetItem {
         this.timestamp = timestamp;
         this.values = values;
     }
+
     public DatasetItem(long timestamp, Double value) {
         this.timestamp = timestamp;
 
@@ -57,5 +58,10 @@ public class DatasetItem {
     public String toString() {
         return "timestamp: " + timestamp +
                 ", " + Arrays.toString(wrap(values));
+    }
+
+    public String asCsv() {
+        return timestamp +
+                ", " + Arrays.toString(wrap(values)).replace("[", "").replace("]", "");
     }
 }

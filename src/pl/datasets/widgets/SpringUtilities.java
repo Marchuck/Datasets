@@ -11,7 +11,7 @@ import java.awt.*;
 /**
  * A 1.4 file that provides utility methods for
  * creating form- or grid-style layouts with SpringLayout.
- * These utilities are used by several programs, such as
+ * These utilities are used by several programs, such saveAs
  * SpringBox and SpringCompactGrid.
  */
 public class SpringUtilities {
@@ -28,7 +28,7 @@ public class SpringUtilities {
     /**
      * Aligns the first <code>rows</code> * <code>cols</code>
      * components of <code>parent</code> in
-     * a grid. Each component is as big as the maximum
+     * a grid. Each component is saveAs big saveAs the maximum
      * preferred width and height of the components.
      * The parent is made just big enough to fit them all.
      *
@@ -130,7 +130,7 @@ public class SpringUtilities {
     /**
      * Aligns the first <code>rows</code> * <code>cols</code>
      * components of <code>parent</code> in
-     * a grid. Each component in a column is as wide as the maximum
+     * a grid. Each component in a column is saveAs wide saveAs the maximum
      * preferred width of the components in that column;
      * height is similarly determined for each row.
      * The parent is made just big enough to fit them all.

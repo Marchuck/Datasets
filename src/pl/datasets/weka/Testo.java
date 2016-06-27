@@ -16,7 +16,7 @@ public class Testo {
 
         Instances instances = ToNominal.get("data/aaaa.csv");
         instances = Filters.filterImmutable(instances);
-        Apriori apriori = AprioriOutput.performApriori(instances);
+        Apriori apriori = AprioriOutput.perform(instances);
         System.out.println(apriori);
     }
 
