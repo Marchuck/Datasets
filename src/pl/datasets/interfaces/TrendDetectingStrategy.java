@@ -2,6 +2,7 @@ package pl.datasets.interfaces;
 
 import pl.datasets.model.DatasetItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,11 @@ public abstract class TrendDetectingStrategy {
     }
 
     public abstract boolean hasTrend(List<DatasetItem> candidate, Integer columnId);
+    public boolean hasTrend(DatasetItem candidate, Integer columnId){
+        List<DatasetItem> tempList = new ArrayList<>();
+        tempList.add(candidate);
+        return hasTrend(tempList,columnId);
+    }
 
     public String getName() {
         return name;

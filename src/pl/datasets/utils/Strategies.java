@@ -91,6 +91,35 @@ public class Strategies {
         }
     }
 
+    public static class InvariantStrategy extends TrendDetectingStrategy{
+
+        public InvariantStrategy(String name) {
+            super(name);
+        }
+
+        @Override
+        public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
+            if (candidate.size() == 1) {
+                return true;
+            } else if (candidate.size() > 1) {
+
+                DatasetItem firstItem;
+                DatasetItem secondItem;
+
+                for (int i = 0; i < candidate.size() - 1; i++) {
+
+                    firstItem = candidate.get(i);
+                    secondItem = candidate.get(i + 1);
+
+                    if (Double.compare(firstItem.getValues().get(columnId),secondItem.getValues().get(columnId))!=0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+
 
     public static class GreaterThanStrategy extends TrendDetectingStrategy {
 

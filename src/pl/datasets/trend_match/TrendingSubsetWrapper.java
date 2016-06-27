@@ -75,19 +75,8 @@ public class TrendingSubsetWrapper {
     }
 
 
-    private List<BeforeAfterPair> getBeforeAfterPairs(){
-        List<BeforeAfterPair> causationList = new ArrayList<>();
 
 
-        
-
-
-
-
-
-
-        return causationList;
-    }
 
     /**
      *
@@ -95,9 +84,37 @@ public class TrendingSubsetWrapper {
      * @param eventAfter
      * @param allowedOffset between 1 and dataset length
      */
-    private void findAfter(Event eventBefore, Event eventAfter, int allowedOffset){
+    public List<BeforeAfterPair> findAfter(Event eventBefore, Event eventAfter, int allowedOffset){
 
+        List<BeforeAfterPair> causationList = new ArrayList<>();
+        DatasetItem beforeCandidate = null;
+
+        for (DatasetItem item : dataset){
+            if (null != beforeCandidate){
+                if ((dataset.indexOf(item)-dataset.indexOf(beforeCandidate))<=allowedOffset && eventAfter.hasTrend(item)){
+                    causationList.add(new BeforeAfterPair((int)beforeCandidate.getTimestamp(),(int)item.getTimestamp()));
+                }
+
+                if (eventBefore.hasTrend(item)){
+                    beforeCandidate = item;
+                }else{
+                    beforeCandidate = null;
+                }
+            }else{
+                if (eventBefore.hasTrend(item)){
+                    beforeCandidate = item;
+                }
+            }
+        }
+        return causationList;
     }
+
+
+
+
+
+
+
 
     private void findTrends(List<Event> columnStrategyPairs) {
 
@@ -131,7 +148,7 @@ public class TrendingSubsetWrapper {
     public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<Event> columnStrategyPairs) {
 
         for (Event pair : columnStrategyPairs) {
-            if (!pair.getStrategy().hasTrend(trendCandidate, pair.getColumnIndex())) {
+            if (!pair.hasTrend(trendCandidate)) {
                 return false;
             }
         }
