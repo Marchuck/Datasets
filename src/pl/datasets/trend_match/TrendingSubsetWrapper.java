@@ -1,5 +1,6 @@
 package pl.datasets.trend_match;
 
+import pl.datasets.model.BeforeAfterPair;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
@@ -19,6 +20,7 @@ public class TrendingSubsetWrapper {
     private List<List<Long>> trendsList = new ArrayList<>();
     private List<Long> singleTrendList = new ArrayList<>();
     private List<DatasetItem> tempWorkingList = new ArrayList<>();
+
 
     private int minTrendLength = 2;
 
@@ -70,6 +72,31 @@ public class TrendingSubsetWrapper {
             }
         }
         return trendsList;
+    }
+
+
+    private List<BeforeAfterPair> getBeforeAfterPairs(){
+        List<BeforeAfterPair> causationList = new ArrayList<>();
+
+
+        
+
+
+
+
+
+
+        return causationList;
+    }
+
+    /**
+     *
+     * @param eventBefore
+     * @param eventAfter
+     * @param allowedOffset between 1 and dataset length
+     */
+    private void findAfter(Event eventBefore, Event eventAfter, int allowedOffset){
+
     }
 
     private void findTrends(List<Event> columnStrategyPairs) {
