@@ -69,7 +69,7 @@ public class DataSetDialog extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
                 wrapper.setMinTrendLength(2);
-                wrapper.getTrends(getEventsFromModel());
+                wrapper.getTrends(events,false);
             }
         });
     }
