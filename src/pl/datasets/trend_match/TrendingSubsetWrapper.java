@@ -3,7 +3,6 @@ package pl.datasets.trend_match;
 import pl.datasets.model.BeforeAfterPair;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.Event;
-import pl.datasets.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +56,10 @@ public class TrendingSubsetWrapper {
     }
 
     public List<List<Long>> getTrends(List<Event> columnStrategyPairs, boolean getAbsenceOfTrend) {
-        if (!getAbsenceOfTrend){
+        if (!getAbsenceOfTrend) {
 
             findTrends(columnStrategyPairs);
-        }else{
+        } else {
             findAbsenceOfTrends(columnStrategyPairs);
         }
         if (null != trendsList && trendsList.size() > 0) {
@@ -89,36 +88,30 @@ public class TrendingSubsetWrapper {
      * @param eventAfter
      * @param allowedOffset between 1 and dataset length
      */
-    public List<BeforeAfterPair> findAfter(Event eventBefore, Event eventAfter, int allowedOffset){
+    public List<BeforeAfterPair> findAfter(Event eventBefore, Event eventAfter, int allowedOffset) {
 
         List<BeforeAfterPair> causationList = new ArrayList<>();
         DatasetItem beforeCandidate = null;
 
-        for (DatasetItem item : dataset){
-            if (null != beforeCandidate){
-                if ((dataset.indexOf(item)-dataset.indexOf(beforeCandidate))<=allowedOffset && eventAfter.hasTrend(item)){
-                    causationList.add(new BeforeAfterPair((int)beforeCandidate.getTimestamp(),(int)item.getTimestamp()));
+        for (DatasetItem item : dataset) {
+            if (null != beforeCandidate) {
+                if ((dataset.indexOf(item) - dataset.indexOf(beforeCandidate)) <= allowedOffset && eventAfter.hasTrend(item)) {
+                    causationList.add(new BeforeAfterPair((int) beforeCandidate.getTimestamp(), (int) item.getTimestamp()));
                 }
 
-                if (eventBefore.hasTrend(item)){
+                if (eventBefore.hasTrend(item)) {
                     beforeCandidate = item;
-                }else{
+                } else {
                     beforeCandidate = null;
                 }
-            }else{
-                if (eventBefore.hasTrend(item)){
+            } else {
+                if (eventBefore.hasTrend(item)) {
                     beforeCandidate = item;
                 }
             }
         }
         return causationList;
     }
-
-
-
-
-
-
 
 
     private void findTrends(List<Event> columnStrategyPairs) {
@@ -192,10 +185,6 @@ public class TrendingSubsetWrapper {
         return true;
 
     }
-
-
-
-
 
 
     private void putDiscoveredTrend(List<DatasetItem> trend) {

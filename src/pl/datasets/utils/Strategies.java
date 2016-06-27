@@ -105,7 +105,7 @@ public class Strategies {
         }
     }
 
-    public static class InvariantStrategy extends TrendDetectingStrategy{
+    public static class InvariantStrategy extends TrendDetectingStrategy {
 
         public InvariantStrategy(String name) {
             super(name);
@@ -125,12 +125,17 @@ public class Strategies {
                     firstItem = candidate.get(i);
                     secondItem = candidate.get(i + 1);
 
-                    if (Double.compare(firstItem.getValues().get(columnId),secondItem.getValues().get(columnId))!=0) {
+                    if (Double.compare(firstItem.getValues().get(columnId), secondItem.getValues().get(columnId)) != 0) {
                         return false;
                     }
                 }
             }
             return true;
+        }
+
+        @Override
+        public String getOptionalThreshold() {
+            return "";
         }
     }
 

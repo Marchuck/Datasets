@@ -3,7 +3,6 @@ package pl.datasets.utils;
 import pl.datasets.interfaces.TrendDetectingStrategy;
 import pl.datasets.model.DatasetItem;
 
-import javax.xml.crypto.Data;
 import java.io.Serializable;
 import java.util.List;
 
@@ -50,11 +49,11 @@ public class Event implements Serializable {
         this.columnIndex = columnIndex;
     }
 
-    public boolean hasTrend(List<DatasetItem> candidate){
-        return getStrategy().hasTrend(candidate,this.columnIndex);
+    public boolean hasTrend(List<DatasetItem> candidate) {
+        return getStrategy().hasTrend(candidate, this.columnIndex);
     }
 
-    public boolean hasTrend(DatasetItem candidate){
-        return getStrategy().hasTrend(candidate,this.columnIndex);
+    public boolean hasTrend(DatasetItem candidate) {
+        return getStrategy().hasTrend(candidate, this.columnIndex);
     }
 }
