@@ -4,13 +4,16 @@ import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
-import pl.datasets.widgets.Caller;
-import pl.datasets.widgets.Spinners;
+import pl.datasets.widgets.EventRenderer;
+import pl.datasets.widgets.ItemCallback;
+import pl.datasets.widgets.SelectOperationDialog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,90 +21,132 @@ import java.util.List;
  * @author Lukasz
  * @since 26.05.2016.
  */
-public class DatasetDialog extends JFrame {
+public class DataSetDialog extends JFrame {
 
-    private static int index = 0;
-    List<Event> events = new ArrayList<>();
+    //    private List<Event> events = new ArrayList<>();
     private JPanel panel1;
     private JButton addButton;
-    private JPanel current_entry;
     private JButton computeButton;
-    private String[] properties;
-    private String[] operations;
-    private JLabel jlabel;
+    private JList<Event> operationsList;
     private List<DatasetItem> items;
-    private Spinners spinnersDialog = new Spinners();
-    private Color[] colors = new Color[]{Color.cyan, Color.yellow, Color.green, Color.orange, Color.pink, Color.lightGray};
+    private SelectOperationDialog selectOperationDialog;
+    private String[] properties;
+    private DefaultListModel<Event> model = new DefaultListModel<>();
 
-    public DatasetDialog(String path, List<DatasetItem> items, String[] properyNames, String[] operations) {
+    public DataSetDialog(String path, List<DatasetItem> items, String[] propertyNames, String[] operations) {
         super(path);
         setContentPane(panel1);
         this.items = items;
-        this.operations = operations;
-        properties = getAttributeNames(properyNames);
-//        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.properties = getAttributeNames(propertyNames);
+        selectOperationDialog = new SelectOperationDialog(properties, operations);
+        init();
         setMinimumSize(new Dimension(300, 200));
         setPreferredSize(new Dimension(300, 200));
         pack();
         setVisible(true);
-        init();
+    }
+
+    /**
+     * @return list of properties of this dataset
+     * NOTE: first item SHOULD BE omitted because it's timestamp
+     */
+    private static String[] getAttributeNames(String[] _properties) {
+//        String[] props = new String[_properties.length - 1];
+//        System.arraycopy(_properties, 1, props, 0, props.length);
+        /**HOT FIX*/
+        return _properties;
     }
 
     private void init() {
+        setupComputeButton();
+        setupAddButton();
+        setupList();
+    }
+
+    private void setupComputeButton() {
         computeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
-                wrapper.setMinTrendLength(1);
-                wrapper.getTrends(events);
+                wrapper.setMinTrendLength(2);
+                wrapper.getTrends(getEventsFromModel());
             }
         });
+    }
+
+    /**
+     * @return events extracted from list's model
+     */
+    private List<Event> getEventsFromModel() {
+        List<Event> events = new ArrayList<>();
+        for (int j = 0; j < model.size(); j++) events.add(model.getElementAt(j));
+        return events;
+    }
+
+    private void setupAddButton() {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                spinnersDialog.display(addButton, properties, operations, new Caller<Event>() {
+                selectOperationDialog.displayAddEventDialog(addButton, new ItemCallback<Event>() {
                     @Override
                     public void call(Event event) {
-
-                        Utils.log(event.toString());
-
-                        events.add(event);
-
-                        if (jlabel == null) {
-                            jlabel = new JLabel(event.toString());
-                            jlabel.setBackground(colorIndex());
-                            current_entry.add(jlabel);
-                        } else {
-                            jlabel.setText(jlabel.getText() + "\n" + event.toString());
-                        }
-                        current_entry.revalidate();
-                        /*final JButton button = new JButton(event.operationName);
-                        button.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                current_entry.remove(jlabel);
-                                current_entry.remove(button);
-                                current_entry.revalidate();
-                                current_entry.repaint();
-                            }
-                        });
-                        current_entry.add(button);
-                        current_entry.revalidate();
-                        current_entry.repaint();*/
+                        Utils.log("Adding event: " + event.toString());
+                        addElementToList(event);
                     }
                 });
             }
         });
     }
 
-    private Color colorIndex() {
-        index = (index++) % colors.length;
-        return colors[index];
+    private void setupList() {
+        Utils.log("setupList()");
+        //bind list with data
+        operationsList.setModel(model);
+        //optional: change default appearance of list's cells
+        operationsList.setCellRenderer(new EventRenderer(properties));
+        operationsList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        operationsList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList) evt.getSource();
+                if (evt.getClickCount() == 1) {
+
+                    /***SINGLE CLICK - EDIT {@link Event} from list*/
+
+                    int index = list.locationToIndex(evt.getPoint());
+                    Utils.log("clicked " + index);
+                    buildEditEventDialog(index);
+                } else if (evt.getClickCount() == 2) {
+
+                    /***DOUBLE CLICK - REMOVE {@link Event} from list*/
+
+                    int index = list.locationToIndex(evt.getPoint());
+                    Utils.log("clicked twice on " + index);
+                    removeElementFromList(index);
+                }
+            }
+        });
     }
 
-    private String[] getAttributeNames(String[] _properties) {
-        String[] props = new String[_properties.length - 1];
-        System.arraycopy(_properties, 1, props, 0, props.length);
-        return props;
+    private void addElementToList(Event event) {
+        Utils.log("addElementToList(" + event.toString() + ")");
+        model.addElement(event);
+        operationsList.invalidate();
+    }
+
+    private void removeElementFromList(int indexOfItem) {
+        Utils.log("removeElementFromList(" + indexOfItem + ")");
+        model.remove(indexOfItem);
+        operationsList.invalidate();
+    }
+
+    private void buildEditEventDialog(final int indexOfSelectedItem) {
+        Utils.log("buildEditEventDialog(" + indexOfSelectedItem + ")");
+        selectOperationDialog.displayEditEventDialog(addButton, new ItemCallback<Event>() {
+            public void call(Event event) {
+                model.set(indexOfSelectedItem, event);
+                operationsList.invalidate();
+            }
+        });
     }
 }
