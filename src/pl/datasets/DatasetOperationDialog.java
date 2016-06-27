@@ -1,14 +1,12 @@
 package pl.datasets;
 
-import pl.datasets.interfaces.TrendDetectingStrategy;
 import pl.datasets.interfaces.SubsetStrategy;
 import pl.datasets.load.CSVReader;
 import pl.datasets.model.BaseItem;
-import pl.datasets.model.ColumnStrategyPair;
 import pl.datasets.model.DatasetItem;
+import pl.datasets.utils.Event;
 import pl.datasets.utils.Strategies;
 import pl.datasets.utils.Utils;
-import pl.datasets.trend_match.TrendingSubsetWrapper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ import java.util.List;
  * @since 26.05.2016.
  */
 public class DatasetOperationDialog {
-    private List<ColumnStrategyPair> columnStrategyPairs = new ArrayList<>();
+    private List<Event> columnStrategyPairs = new ArrayList<>();
 
     private DatasetDialog dialog;
 
@@ -34,9 +32,9 @@ public class DatasetOperationDialog {
         List<DatasetItem> dataset = getFulldataset(true);
         String[] properties = CSVReader.wrapStrings(dataset.get(0).getProperties());
 
-        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("++"), 0));
-        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("--"), 2));
-        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy(">", 20), 1));
+        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("++"), 0));
+        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("--"), 2));
+        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy(">", 20), 1));
 
         dialog = new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">"});
     }
