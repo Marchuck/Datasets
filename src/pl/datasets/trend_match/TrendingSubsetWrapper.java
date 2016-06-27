@@ -151,6 +151,8 @@ public class TrendingSubsetWrapper {
 
     private void findAbsenceOfTrends(List<Event> columnStrategyPairs) {
 
+        setMinTrendLength(1);
+
         for (DatasetItem item : dataset) {
 
             tempWorkingList.add(item);
