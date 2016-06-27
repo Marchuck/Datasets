@@ -18,17 +18,17 @@ import java.util.List;
  * @author Lukasz
  * @since 26.05.2016.
  */
-public class DatasetOperationDialog {
+public class MainDatasetOperationFrame {
     private List<Event> columnStrategyPairs = new ArrayList<>();
 
-    private DatasetDialog dialog;
+    private DataSetDialog dialog;
 
 
-    public DatasetOperationDialog(boolean b) {
+    public MainDatasetOperationFrame(boolean b) {
         //no-op
     }
 
-    public DatasetOperationDialog() {
+    public MainDatasetOperationFrame() {
         List<DatasetItem> dataset = getFulldataset(true);
         String[] properties = CSVReader.wrapStrings(dataset.get(0).getProperties());
 
@@ -36,13 +36,13 @@ public class DatasetOperationDialog {
         columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("--"), 2));
         columnStrategyPairs.add(new Event(Strategies.recognizeStrategy(">", 20), 1));
 
-        dialog = new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">"});
+        dialog = new DataSetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">"});
     }
 
 
     public static void main(String[] args) {
-        new DatasetOperationDialog();
-//        List<DatasetItem> data = new DatasetOperationDialog(true).getFulldataset(true);
+        new MainDatasetOperationFrame();
+//        List<DatasetItem> data = new MainDatasetOperationFrame(true).getFulldataset(true);
 //
 //        TrendingSubsetWrapper trend = TrendingSubsetWrapper.getInstance(data);
 //
@@ -156,7 +156,7 @@ public class DatasetOperationDialog {
 
     public List<DatasetItem> getFulldataset(boolean verbose) {
         List<DatasetItem> dataset = new ArrayList<>();
-        List<List<BaseItem>> sets = new DatasetOperationDialog(true).createAllSublists();
+        List<List<BaseItem>> sets = new MainDatasetOperationFrame(true).createAllSublists();
         int minSize = getMinSize(sets);
         for (int j = 0; j < minSize; j++) {
             List<Double> doubles = new ArrayList<>();

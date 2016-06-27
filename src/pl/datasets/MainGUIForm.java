@@ -60,7 +60,7 @@ public class MainGUIForm extends JFrame implements OnFileLoadedListener, OnFileC
         System.out.println("onChosen()");
         File file = listModel.get(fileIndex).file;
 
-        new DatasetOperationDialog();
+        new MainDatasetOperationFrame();
      //     dispose(); uncoment to kill previous JFrame
     }
 
