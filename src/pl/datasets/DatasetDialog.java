@@ -1,5 +1,6 @@
 package pl.datasets;
 
+import com.sun.istack.internal.Nullable;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
@@ -72,8 +73,19 @@ public class DatasetDialog extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
                 wrapper.setMinTrendLength(2);
-                List<List<Long>> results = wrapper.getTrends(getEventsFromModel(), false);
-                new ResultsEntity().bind(results);
+                List<List<List<Long>>> resultsOfAllSingleWrapperOutput = new ArrayList<>();
+                List<Event> events = getEventsFromModel();
+                List<List<Long>> results = wrapper.getTrends(events, false);
+                //result combined from all outputs
+                resultsOfAllSingleWrapperOutput.add(results);
+                for (Event ev : events) {
+                    TrendingSubsetWrapper uniquewrapper = TrendingSubsetWrapper.getInstance(items);
+                    resultsOfAllSingleWrapperOutput.add(uniquewrapper.getTrends(ev, false));
+                }
+//                List<List<Long>> results1 = wrapper.getTrends(, false);
+//                res.add(results);
+//                new ResultsEntity().bind(results);
+                new ResultsEntity().bindAll(resultsOfAllSingleWrapperOutput);
             }
         });
     }
@@ -93,7 +105,8 @@ public class DatasetDialog extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 selectOperationDialog.displayAddEventDialog(addButton, new ItemCallback<Event>() {
                     @Override
-                    public void call(Event event) {
+                    public void call(@Nullable Event event) {
+                        if (event == null) return;
                         Utils.log("Adding event: " + event.toString());
                         addElementToList(event);
                     }
@@ -114,13 +127,15 @@ public class DatasetDialog extends JFrame {
             public void mouseClicked(MouseEvent evt) {
                 JList list = (JList) evt.getSource();
                 if (evt.getClickCount() == 2) {
-
+                    Utils.log("double click");
                     /***DOUBLE CLICK - REMOVE {@link Event} from list*/
 
                     int index = list.locationToIndex(evt.getPoint());
                     Utils.log("clicked twice on " + index);
                     removeElementFromList(index);
-                } else if (evt.getClickCount() == 1) {
+                }
+                if (evt.getClickCount() == 1) {
+                    Utils.log("click");
 
                     /***SINGLE CLICK - EDIT {@link Event} from list*/
 
@@ -148,8 +163,13 @@ public class DatasetDialog extends JFrame {
         Utils.log("buildEditEventDialog(" + indexOfSelectedItem + ")");
         selectOperationDialog.displayEditEventDialog(addButton, new ItemCallback<Event>() {
             public void call(Event event) {
-                model.set(indexOfSelectedItem, event);
-                operationsList.invalidate();
+                if (event == null) {
+                    model.remove(indexOfSelectedItem);
+                    operationsList.invalidate();
+                } else {
+                    model.set(indexOfSelectedItem, event);
+                    operationsList.invalidate();
+                }
             }
         });
     }

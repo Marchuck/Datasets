@@ -5,6 +5,7 @@ import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.Event;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,7 +35,6 @@ public class TrendingSubsetWrapper {
     }
 
 
-
     /**
      * Set minimal length of the searched trend
      *
@@ -53,6 +53,10 @@ public class TrendingSubsetWrapper {
             }
             System.out.println();
         }
+    }
+
+    public List<List<Long>> getTrends(Event columnStrategyPairs, boolean getAbsenceOfTrend) {
+        return getTrends(Collections.singletonList(columnStrategyPairs), getAbsenceOfTrend);
     }
 
     public List<List<Long>> getTrends(List<Event> columnStrategyPairs, boolean getAbsenceOfTrend) {
@@ -78,7 +82,6 @@ public class TrendingSubsetWrapper {
     }
 
     /**
-     *
      * @param eventBefore
      * @param eventAfter
      * @param allowedOffset between 1 and dataset length
@@ -166,8 +169,6 @@ public class TrendingSubsetWrapper {
         }
         putTrendDelimiter();
     }
-
-
 
 
     public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<Event> columnStrategyPairs) {
