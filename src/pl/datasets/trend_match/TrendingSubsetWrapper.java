@@ -56,6 +56,9 @@ public class TrendingSubsetWrapper {
     }
 
     public List<List<Long>> getTrends(List<Event> columnStrategyPairs, boolean getAbsenceOfTrend) {
+
+        clearLists();
+
         if (!getAbsenceOfTrend) {
             findTrends(columnStrategyPairs);
         } else {
@@ -75,6 +78,12 @@ public class TrendingSubsetWrapper {
             }
         }
         return trendsList;
+    }
+
+    private void clearLists() {
+        trendsList.clear();
+        singleTrendList.clear();
+        tempWorkingList.clear();
     }
 
     /**
@@ -110,6 +119,9 @@ public class TrendingSubsetWrapper {
 
 
     private void findTrends(List<Event> columnStrategyPairs) {
+
+        setMinTrendLength(1);
+
 
         for (DatasetItem item : dataset) {
 
