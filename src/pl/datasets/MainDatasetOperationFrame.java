@@ -8,6 +8,7 @@ import pl.datasets.utils.CsvSave;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,26 +24,12 @@ public class MainDatasetOperationFrame {
 
     private DataSetDialog dialog;
 
-
     public MainDatasetOperationFrame(boolean b) {
         //no-op
     }
 
     public MainDatasetOperationFrame() {
-        List<DatasetItem> dataset = getFulldataSet(true);
-        // save(dataset);
-//        try {
-//            Apriori a = AprioriOutput.perform("full_dataset.csv");
-//            System.out.println(a);
-//        } catch (Exception ignored) {
-//        }
-        String[] properties = CSVReader.listToArray(dataset.get(0).getProperties());
-//
-//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("++"), 0));
-//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("--"), 2));
-//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy(">", 20), 1));
-//
-        dialog = new DataSetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
+        dialog = createDialog();
     }
 
     public static void main(String[] args) {
@@ -54,13 +41,18 @@ public class MainDatasetOperationFrame {
 //        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("--"), 2));
 //        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy(">", 20), 1));
 //        trend.getTrends(columnStrategyPairs);
-
     }
 
     private static <X> int getMinSize(List<List<X>> sets) {
         List<Integer> sizes = new ArrayList<>();
         for (List<X> l : sets) sizes.add(l.size());
         return Collections.min(sizes);
+    }
+
+    private DataSetDialog createDialog() {
+        List<DatasetItem> dataset = getFulldataSet(true);
+        String[] properties = CSVReader.listToArray(dataset.get(0).getProperties());
+        return new DataSetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
     }
 
     public void save(List<DatasetItem> dataset, String filename) {
@@ -137,5 +129,7 @@ public class MainDatasetOperationFrame {
         return dataset;
     }
 
-
+    public JFrame getDialog() {
+        return dialog;
+    }
 }

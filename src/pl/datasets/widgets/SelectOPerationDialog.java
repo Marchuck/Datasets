@@ -23,7 +23,7 @@ public class SelectOperationDialog extends JPanel {
 
     private Event currentEvent;
     private String currentStrategyName = "";
-    private double currentThreshold;
+    private double currentThreshold = 40;
     private String[] propertiesToSelect, operations;
 
     public SelectOperationDialog() {

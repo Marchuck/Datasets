@@ -90,7 +90,7 @@ public class DataSetDialog extends JFrame {
                 selectOperationDialog.displayAddEventDialog(addButton, new ItemCallback<Event>() {
                     @Override
                     public void call(Event event) {
-                        event.setColumnIndex(event.getColumnIndex() - 3);
+                        event.setColumnIndex(event.getColumnIndex());
                         Utils.log("Adding event: " + event.toString());
                         addElementToList(event);
                     }

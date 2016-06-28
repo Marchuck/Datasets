@@ -78,10 +78,6 @@ public class TrendingSubsetWrapper {
         return trendsList;
     }
 
-
-
-
-
     /**
      *
      * @param eventBefore

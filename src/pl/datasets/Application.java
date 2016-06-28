@@ -11,9 +11,12 @@ import java.util.List;
  * @since 26.05.2016.
  */
 public class Application {
+    public static Application instance;
     public JFrame currentUsedFrame;
 
-    public static Application instance;
+    private Application() {
+        currentUsedFrame = new MainDatasetOperationFrame().getDialog();
+    }
 
     public static Application getInstance() {
         if (instance == null) instance = new Application();
@@ -23,11 +26,6 @@ public class Application {
     public static void main(String[] args) {
         Application.getInstance();
 
-    }
-
-
-    private Application() {
-        currentUsedFrame = new MainGUIForm();
     }
 
     public List<DatasetItem> getDataset() {

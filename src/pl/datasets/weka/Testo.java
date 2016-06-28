@@ -9,14 +9,18 @@ import weka.core.Instances;
  */
 public class Testo {
     public static void main(String[] args) throws Exception {
-        new Testo().run();
+        new Testo().apriori();
+    }
+
+    private void apriori() {
+        AprioriTest.testAll();
     }
 
     private void run() throws Exception {
 
         Instances instances = ToNominal.get("data/aaaa.csv");
         instances = Filters.filterImmutable(instances);
-        Apriori apriori = AprioriOutput.perform(instances);
+        Apriori apriori = AprioriTest.perform(instances);
         System.out.println(apriori);
     }
 
