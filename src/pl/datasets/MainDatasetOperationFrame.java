@@ -77,10 +77,13 @@ public class MainDatasetOperationFrame {
         List<List<BaseItem>> subsetToMerge = new ArrayList<>();
 
         subsetToMerge.add(subsetOf("data/weather/SF04.csv", new CSVReader.DataSetWeatherStrategy("SF04")));
+        subsetToMerge.add(subsetOf("data/weather/SF15.csv", new CSVReader.DataSetWeatherStrategy("SF15")));
+        subsetToMerge.add(subsetOf("data/weather/SF17.csv", new CSVReader.DataSetWeatherStrategy("SF17")));
+        subsetToMerge.add(subsetOf("data/weather/SF18.csv", new CSVReader.DataSetWeatherStrategy("SF18")));
         subsetToMerge.add(subsetOf("data/stock_exchange/istambul.csv", new CSVReader.IstambulStrategy()));
-        subsetToMerge.add(subsetOf("data/island/reykjavik.csv", new CSVReader.IslandStrategy()));
         subsetToMerge.add(subsetOf("data/ad_viz_tile_data.csv", new CSVReader.PollutantStrategy()));
-        subsetToMerge.add(subsetOf("data/nfl/nfl_weather.csv", new CSVReader.NFLWeatherStrategy()));
+//        subsetToMerge.add(subsetOf("data/island/reykjavik.csv", new CSVReader.IslandStrategy())); !!!!
+        subsetToMerge.add(subsetOf("data/nfl/nfl_weather.csv", new CSVReader.NFLWeatherStrategy())); //!!!!
 
         return subsetToMerge;
     }

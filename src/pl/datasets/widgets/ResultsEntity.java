@@ -49,13 +49,13 @@ public class ResultsEntity {
                 }
             }
         }
-        display(data, "TEXT XDXDXDXD");
+        display(data, "Results");
     }
 
     public static void display(List<Boolean> data, String title) {
-        JFrame window = new JFrame();
+        JDialog window = new JDialog();
         window.setTitle(title);
-        window.setLayout(new FlowLayout());
+        //window.setLayout(new FlowLayout());
         //   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setBounds(30, 30, 1000, 200);
         window.getContentPane().setLayout(new FlowLayout(5));
@@ -63,7 +63,7 @@ public class ResultsEntity {
        // window.getContentPane().add(new JLabel("ASCENDING"));
         window.add(new JLabel("ASCENDING"));
         window.add(new ResultCanvas(new Point(20, 20), data));
-
+        window.pack();
         window.setLocationByPlatform(true);
         window.setVisible(true);
     }

@@ -55,6 +55,8 @@ public class ResultCanvas extends JComponent {
     }
 
     public ResultCanvas(Point position, java.util.List<Boolean> data) {
+        this.setMinimumSize(new Dimension(700, 40));
+        this.setPreferredSize(new Dimension(700, 40));
         this.data = data;
         this.position = position;
     }

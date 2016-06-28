@@ -1,6 +1,5 @@
 package pl.datasets;
 
-import oracle.jrockit.jfr.JFR;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
@@ -47,7 +46,6 @@ public class DatasetDialog extends JFrame {
         pack();
         setLocation(300,300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-//        setLocationByPlatform(true);
         setVisible(true);
     }
 
