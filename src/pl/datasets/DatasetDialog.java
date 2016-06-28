@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class DataSetDialog extends JFrame {
 
-    //    private List<Event> events = new ArrayList<>();
+    //private List<Event> events = new ArrayList<>();
     private JPanel panel1;
     private JButton addButton;
     private JButton computeButton;
@@ -68,8 +68,8 @@ public class DataSetDialog extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
-                wrapper.setMinTrendLength(2);
-                wrapper.getTrends(events,false);
+                wrapper.setMinTrendLength(1);
+                wrapper.getTrends(getEventsFromModel(), false);
             }
         });
     }
@@ -90,6 +90,7 @@ public class DataSetDialog extends JFrame {
                 selectOperationDialog.displayAddEventDialog(addButton, new ItemCallback<Event>() {
                     @Override
                     public void call(Event event) {
+                        event.setColumnIndex(event.getColumnIndex() - 3);
                         Utils.log("Adding event: " + event.toString());
                         addElementToList(event);
                     }
