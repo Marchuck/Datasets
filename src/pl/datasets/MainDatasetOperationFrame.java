@@ -21,7 +21,7 @@ import java.util.List;
 public class MainDatasetOperationFrame {
     private List<Event> columnStrategyPairs = new ArrayList<>();
 
-    private DataSetDialog dialog;
+    private DatasetDialog dialog;
 
 
     public MainDatasetOperationFrame(boolean b) {
@@ -42,7 +42,7 @@ public class MainDatasetOperationFrame {
 //        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("--"), 2));
 //        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy(">", 20), 1));
 //
-        dialog = new DataSetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
+        dialog = new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
     }
 
     public static void main(String[] args) {

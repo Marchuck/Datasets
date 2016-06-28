@@ -62,6 +62,8 @@ public class SelectOperationDialog extends JPanel {
         displayAddEventDialog(parent, eventItemCallback);
     }
 
+
+
     public void displayAddEventDialog(JComponent parent, final ItemCallback<Event> eventCallable) {
         //main dialog
         if (currentEvent == null) currentEvent = new Event();

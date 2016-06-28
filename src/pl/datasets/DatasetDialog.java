@@ -1,11 +1,13 @@
 package pl.datasets;
 
+import oracle.jrockit.jfr.JFR;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
 import pl.datasets.widgets.EventRenderer;
 import pl.datasets.widgets.ItemCallback;
+import pl.datasets.widgets.ResultsEntity;
 import pl.datasets.widgets.SelectOperationDialog;
 
 import javax.swing.*;
@@ -21,7 +23,7 @@ import java.util.List;
  * @author Lukasz
  * @since 26.05.2016.
  */
-public class DataSetDialog extends JFrame {
+public class DatasetDialog extends JFrame {
 
     //    private List<Event> events = new ArrayList<>();
     private JPanel panel1;
@@ -33,7 +35,7 @@ public class DataSetDialog extends JFrame {
     private String[] properties;
     private DefaultListModel<Event> model = new DefaultListModel<>();
 
-    public DataSetDialog(String path, List<DatasetItem> items, String[] propertyNames, String[] operations) {
+    public DatasetDialog(String path, List<DatasetItem> items, String[] propertyNames, String[] operations) {
         super(path);
         setContentPane(panel1);
         this.items = items;
@@ -43,6 +45,9 @@ public class DataSetDialog extends JFrame {
         setMinimumSize(new Dimension(300, 200));
         setPreferredSize(new Dimension(300, 200));
         pack();
+        setLocation(300,300);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        setLocationByPlatform(true);
         setVisible(true);
     }
 
@@ -69,7 +74,8 @@ public class DataSetDialog extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
                 wrapper.setMinTrendLength(2);
-                wrapper.getTrends(events,false);
+                List<List<Long>> results = wrapper.getTrends(getEventsFromModel(), false);
+                new ResultsEntity().bind(results);
             }
         });
     }
@@ -109,20 +115,20 @@ public class DataSetDialog extends JFrame {
             @Override
             public void mouseClicked(MouseEvent evt) {
                 JList list = (JList) evt.getSource();
-                if (evt.getClickCount() == 1) {
-
-                    /***SINGLE CLICK - EDIT {@link Event} from list*/
-
-                    int index = list.locationToIndex(evt.getPoint());
-                    Utils.log("clicked " + index);
-                    buildEditEventDialog(index);
-                } else if (evt.getClickCount() == 2) {
+                if (evt.getClickCount() == 2) {
 
                     /***DOUBLE CLICK - REMOVE {@link Event} from list*/
 
                     int index = list.locationToIndex(evt.getPoint());
                     Utils.log("clicked twice on " + index);
                     removeElementFromList(index);
+                } else if (evt.getClickCount() == 1) {
+
+                    /***SINGLE CLICK - EDIT {@link Event} from list*/
+
+                    int index = list.locationToIndex(evt.getPoint());
+                    Utils.log("clicked " + index);
+                    buildEditEventDialog(index);
                 }
             }
         });
