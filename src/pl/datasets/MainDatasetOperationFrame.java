@@ -8,7 +8,6 @@ import pl.datasets.utils.CsvSave;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,14 +21,28 @@ import java.util.List;
 public class MainDatasetOperationFrame {
     private List<Event> columnStrategyPairs = new ArrayList<>();
 
-    private DataSetDialog dialog;
+    private DatasetDialog dialog;
+
 
     public MainDatasetOperationFrame(boolean b) {
         //no-op
     }
 
     public MainDatasetOperationFrame() {
-        dialog = createDialog();
+        List<DatasetItem> dataset = getFulldataSet(true);
+        // save(dataset);
+//        try {
+//            Apriori a = AprioriOutput.perform("full_dataset.csv");
+//            System.out.println(a);
+//        } catch (Exception ignored) {
+//        }
+        String[] properties = CSVReader.listToArray(dataset.get(0).getProperties());
+//
+//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("++"), 0));
+//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("--"), 2));
+//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy(">", 20), 1));
+//
+        dialog = new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
     }
 
     public static void main(String[] args) {
@@ -41,18 +54,13 @@ public class MainDatasetOperationFrame {
 //        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("--"), 2));
 //        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy(">", 20), 1));
 //        trend.getTrends(columnStrategyPairs);
+
     }
 
     private static <X> int getMinSize(List<List<X>> sets) {
         List<Integer> sizes = new ArrayList<>();
         for (List<X> l : sets) sizes.add(l.size());
         return Collections.min(sizes);
-    }
-
-    private DataSetDialog createDialog() {
-        List<DatasetItem> dataset = getFulldataSet(true);
-        String[] properties = CSVReader.listToArray(dataset.get(0).getProperties());
-        return new DataSetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
     }
 
     public void save(List<DatasetItem> dataset, String filename) {
@@ -69,10 +77,13 @@ public class MainDatasetOperationFrame {
         List<List<BaseItem>> subsetToMerge = new ArrayList<>();
 
         subsetToMerge.add(subsetOf("data/weather/SF04.csv", new CSVReader.DataSetWeatherStrategy("SF04")));
+        subsetToMerge.add(subsetOf("data/weather/SF15.csv", new CSVReader.DataSetWeatherStrategy("SF15")));
+        subsetToMerge.add(subsetOf("data/weather/SF17.csv", new CSVReader.DataSetWeatherStrategy("SF17")));
+        subsetToMerge.add(subsetOf("data/weather/SF18.csv", new CSVReader.DataSetWeatherStrategy("SF18")));
         subsetToMerge.add(subsetOf("data/stock_exchange/istambul.csv", new CSVReader.IstambulStrategy()));
-        subsetToMerge.add(subsetOf("data/island/reykjavik.csv", new CSVReader.IslandStrategy()));
         subsetToMerge.add(subsetOf("data/ad_viz_tile_data.csv", new CSVReader.PollutantStrategy()));
-        subsetToMerge.add(subsetOf("data/nfl/nfl_weather.csv", new CSVReader.NFLWeatherStrategy()));
+//        subsetToMerge.add(subsetOf("data/island/reykjavik.csv", new CSVReader.IslandStrategy())); !!!!
+        subsetToMerge.add(subsetOf("data/nfl/nfl_weather.csv", new CSVReader.NFLWeatherStrategy())); //!!!!
 
         return subsetToMerge;
     }
@@ -129,7 +140,5 @@ public class MainDatasetOperationFrame {
         return dataset;
     }
 
-    public JFrame getDialog() {
-        return dialog;
-    }
+
 }

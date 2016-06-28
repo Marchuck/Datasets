@@ -194,10 +194,10 @@ public class CSVReader<T> {
         @Override
         public List<String> getProperties() {
             List<String> list = new ArrayList<>();
-            list.add(base.concat("Wind_Velocity_Mtr_Sec"));
-            list.add(base.concat("Wind_Direction_Variance_Deg"));
-            list.add(base.concat("Wind_Direction_Deg"));
-            list.add(base.concat("Ambient_Temperature_Deg_C"));
+            list.add(base.concat("_Wind_Velocity_Mtr_Sec"));
+            list.add(base.concat("_Wind_Direction_Variance_Deg"));
+            list.add(base.concat("_Wind_Direction_Deg"));
+            list.add(base.concat("_Ambient_Temperature_Deg_C"));
             return list;
         }
     }
@@ -261,7 +261,6 @@ public class CSVReader<T> {
     }
 
     public static class IslandStrategy implements SubsetStrategy {
-
 
         @Override
         public BaseItem createNewRow(String line) {

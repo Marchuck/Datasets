@@ -57,7 +57,6 @@ public class TrendingSubsetWrapper {
 
     public List<List<Long>> getTrends(List<Event> columnStrategyPairs, boolean getAbsenceOfTrend) {
         if (!getAbsenceOfTrend) {
-
             findTrends(columnStrategyPairs);
         } else {
             findAbsenceOfTrends(columnStrategyPairs);
