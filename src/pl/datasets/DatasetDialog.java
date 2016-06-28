@@ -1,14 +1,13 @@
 package pl.datasets;
 
 import com.sun.istack.internal.Nullable;
+import javafx.util.Pair;
+import pl.datasets.model.BeforeAfterPair;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
-import pl.datasets.widgets.EventRenderer;
-import pl.datasets.widgets.ItemCallback;
-import pl.datasets.widgets.ResultsEntity;
-import pl.datasets.widgets.SelectOperationDialog;
+import pl.datasets.widgets.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +29,7 @@ public class DatasetDialog extends JFrame {
     private JButton addButton;
     private JButton computeButton;
     private JList<Event> operationsList;
+    private JButton beforeAfterButton;
     private List<DatasetItem> items;
     private SelectOperationDialog selectOperationDialog;
     private String[] properties;
@@ -64,7 +64,26 @@ public class DatasetDialog extends JFrame {
     private void init() {
         setupComputeButton();
         setupAddButton();
+        setupBeforeAfterButton();
         setupList();
+    }
+
+    private void setupBeforeAfterButton() {
+        beforeAfterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TwoEventsDialog().chooseTwo(beforeAfterButton, getEventsFromModel(), new ItemCallback<Pair<Event, Event>>() {
+                    @Override
+                    public void call(Pair<Event, Event> event) {
+                        TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
+                        List<BeforeAfterPair> beforeAfterPairs = wrapper.findAfter(event.getKey(), event.getValue(), 8);
+                        for (BeforeAfterPair a : beforeAfterPairs) {
+                            Utils.log(a.toString());
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void setupComputeButton() {
@@ -74,17 +93,35 @@ public class DatasetDialog extends JFrame {
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
                 wrapper.setMinTrendLength(2);
                 List<List<List<Long>>> resultsOfAllSingleWrapperOutput = new ArrayList<>();
+                List<List<Boolean>> bols = new ArrayList<>();
                 List<Event> events = getEventsFromModel();
-                List<List<Long>> results = wrapper.getTrends(events, false);
-                //result combined from all outputs
-                resultsOfAllSingleWrapperOutput.add(results);
+
+                if (events.size() > 1) {
+                    List<List<Long>> results = wrapper.getTrends(events, false);
+                    //result combined from all outputs
+                    resultsOfAllSingleWrapperOutput.add(results);
+                }
+
                 for (Event ev : events) {
-                    TrendingSubsetWrapper uniquewrapper = TrendingSubsetWrapper.getInstance(items);
-                    resultsOfAllSingleWrapperOutput.add(uniquewrapper.getTrends(ev, false));
+                    bols.add(wrapper.eval(ev));
+                    List<List<Long>> trends = wrapper.getTrends(ev, false);
+                    for (List<Long> l : trends)
+//                        Utils.log(Arrays.toString(CSVReader.genericlistToArray(l, new CSVReader.Bie<Long>() {
+//                            @Override
+//                            public Long[] create(int capacity) {
+//                                return new Long[capacity];
+//                            }
+//                        })));
+                        resultsOfAllSingleWrapperOutput.add(trends);
+                }
+                for (int j = 0; j < resultsOfAllSingleWrapperOutput.size(); j++) {
+
                 }
 //                List<List<Long>> results1 = wrapper.getTrends(, false);
 //                res.add(results);
 //                new ResultsEntity().bind(results);
+
+
                 new ResultsEntity().bindAll(resultsOfAllSingleWrapperOutput);
             }
         });

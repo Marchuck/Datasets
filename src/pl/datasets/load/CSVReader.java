@@ -36,11 +36,19 @@ public class CSVReader<T> {
         return doubles1;
     }
 
+
     public static String[] listToArray(List<String> strings) {
         String[] strings1 = new String[strings.size()];
         for (int j = 0; j < strings.size(); j++)
             strings1[j] = strings.get(j);
         return strings1;
+    }
+
+    public static <T> T[] genericlistToArray(List<T> listItems, @NonNull Bie<T> newbie) {
+        T[] arrayItems = newbie.create(listItems.size());//[strings.size()];
+        for (int j = 0; j < listItems.size(); j++)
+            arrayItems[j] = listItems.get(j);
+        return arrayItems;
     }
 
     public CSVReader<T> skipFirstLine() {
@@ -115,6 +123,10 @@ public class CSVReader<T> {
 
     public String[] properties(String expression) {
         return firstLine.split(expression);
+    }
+
+    public interface Bie<T> {
+        T[] create(int capacity);
     }
 
     public static class DataSetItemStrategy implements ReadStrategy<DatasetItem> {

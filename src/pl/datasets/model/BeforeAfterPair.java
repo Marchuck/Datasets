@@ -8,6 +8,12 @@ public class BeforeAfterPair {
     int beforeTimestamp;
     int afterTimestamp;
 
+    public BeforeAfterPair(int beforeTimestamp, int afterTimestamp) {
+
+        this.beforeTimestamp = beforeTimestamp;
+        this.afterTimestamp = afterTimestamp;
+    }
+
     public int getBeforeTimestamp() {
         return beforeTimestamp;
     }
@@ -24,9 +30,9 @@ public class BeforeAfterPair {
         this.afterTimestamp = afterTimestamp;
     }
 
-    public BeforeAfterPair(int beforeTimestamp, int afterTimestamp) {
-
-        this.beforeTimestamp = beforeTimestamp;
-        this.afterTimestamp = afterTimestamp;
+    @Override
+    public String toString() {
+        return "[" + beforeTimestamp +
+                ", " + afterTimestamp + "]";
     }
 }

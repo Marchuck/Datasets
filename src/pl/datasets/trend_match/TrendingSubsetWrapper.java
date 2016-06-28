@@ -3,9 +3,9 @@ package pl.datasets.trend_match;
 import pl.datasets.model.BeforeAfterPair;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.Event;
+import pl.datasets.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,8 +55,21 @@ public class TrendingSubsetWrapper {
         }
     }
 
-    public List<List<Long>> getTrends(Event columnStrategyPairs, boolean getAbsenceOfTrend) {
-        return getTrends(Collections.singletonList(columnStrategyPairs), getAbsenceOfTrend);
+    public List<List<Long>> getTrends(final Event columnStrategyPair, boolean getAbsenceOfTrend) {
+        return getTrends(new ArrayList<Event>() {{
+            add(columnStrategyPair);
+        }}, getAbsenceOfTrend);
+//        return getTrends(Collections.singletonList(columnStrategyPair), getAbsenceOfTrend);
+    }
+
+
+    public List<Boolean> eval(final Event columnStrategyPair) {
+        List<Boolean> trending = new ArrayList<>();
+        int index = columnStrategyPair.getColumnIndex();
+        for (DatasetItem d : dataset) {
+            trending.add(columnStrategyPair.getStrategy().hasTrend(d, index));
+        }
+        return trending;
     }
 
     public List<List<Long>> getTrends(List<Event> columnStrategyPairs, boolean getAbsenceOfTrend) {
@@ -81,6 +94,7 @@ public class TrendingSubsetWrapper {
                 }
             }
         }
+        Utils.log("Returning list containing " + trendsList.size() + " elements");
         return trendsList;
     }
 
