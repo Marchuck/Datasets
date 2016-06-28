@@ -44,7 +44,7 @@ public class DatasetDialog extends JFrame {
         setMinimumSize(new Dimension(300, 200));
         setPreferredSize(new Dimension(300, 200));
         pack();
-        setLocation(300,300);
+        setLocation(300, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }

@@ -17,9 +17,24 @@ import java.util.List;
 public class ResultsEntity {
 
 
-
     public static void main(String[] args) {
 
+    }
+
+    public static void display(List<Boolean> data, String title) {
+        JDialog window = new JDialog();
+        window.setTitle(title);
+        //window.setLayout(new FlowLayout());
+        //   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setBounds(30, 30, 1000, 200);
+        window.getContentPane().setLayout(new FlowLayout(5));
+        // window.getContentPane().add(new ResultCanvas(new Point(20, 20), data));
+        // window.getContentPane().add(new JLabel("ASCENDING"));
+        window.add(new JLabel("ASCENDING"));
+        window.add(new ResultCanvas(new Point(20, 20), data));
+        window.pack();
+        window.setLocationByPlatform(true);
+        window.setVisible(true);
     }
 
     @Deprecated
@@ -50,21 +65,5 @@ public class ResultsEntity {
             }
         }
         display(data, "Results");
-    }
-
-    public static void display(List<Boolean> data, String title) {
-        JDialog window = new JDialog();
-        window.setTitle(title);
-        //window.setLayout(new FlowLayout());
-        //   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setBounds(30, 30, 1000, 200);
-        window.getContentPane().setLayout(new FlowLayout(5));
-       // window.getContentPane().add(new ResultCanvas(new Point(20, 20), data));
-       // window.getContentPane().add(new JLabel("ASCENDING"));
-        window.add(new JLabel("ASCENDING"));
-        window.add(new ResultCanvas(new Point(20, 20), data));
-        window.pack();
-        window.setLocationByPlatform(true);
-        window.setVisible(true);
     }
 }

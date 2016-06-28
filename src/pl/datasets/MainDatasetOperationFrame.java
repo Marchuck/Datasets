@@ -29,24 +29,11 @@ public class MainDatasetOperationFrame {
     }
 
     public MainDatasetOperationFrame() {
-        List<DatasetItem> dataset = getFulldataSet(true);
-        // save(dataset);
-//        try {
-//            Apriori a = AprioriOutput.perform("full_dataset.csv");
-//            System.out.println(a);
-//        } catch (Exception ignored) {
-//        }
-        String[] properties = CSVReader.listToArray(dataset.get(0).getProperties());
-//
-//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("++"), 0));
-//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy("--"), 2));
-//        columnStrategyPairs.add(new Event(Strategies.recognizeStrategy(">", 20), 1));
-//
-        dialog = new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
+        //dialog= getDialog();
     }
 
     public static void main(String[] args) {
-        new MainDatasetOperationFrame();
+        new MainDatasetOperationFrame().getDialog();
 //        List<DatasetItem> data = new MainDatasetOperationFrame(true).getFulldataSet(true);
 //        TrendingSubsetWrapper trend = TrendingSubsetWrapper.getInstance(data);
 //        List<ColumnStrategyPair> columnStrategyPairs = new ArrayList<>();
@@ -61,6 +48,13 @@ public class MainDatasetOperationFrame {
         List<Integer> sizes = new ArrayList<>();
         for (List<X> l : sets) sizes.add(l.size());
         return Collections.min(sizes);
+    }
+
+    public DatasetDialog getDialog() {
+        List<DatasetItem> dataset = getFulldataSet(true);
+//        save(dataset,"dataset");
+        String[] properties = CSVReader.listToArray(dataset.get(0).getProperties());
+        return new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
     }
 
     public void save(List<DatasetItem> dataset, String filename) {
@@ -106,6 +100,10 @@ public class MainDatasetOperationFrame {
 
     private void initAscendingTrendRecognition(List<DatasetItem> dataset) {
 
+    }
+
+    public List<DatasetItem> getFulldataSet() {
+        return getFulldataSet(true);
     }
 
     public List<DatasetItem> getFulldataSet(boolean logsVerbosity) {

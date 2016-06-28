@@ -22,6 +22,13 @@ public class ResultCanvas extends JComponent {
     private Color nonExistanceColor = Color.LIGHT_GRAY;
     private Color separatorColor = Color.BLACK;
 
+    public ResultCanvas(Point position, java.util.List<Boolean> data) {
+        this.setMinimumSize(new Dimension(700, 40));
+        this.setPreferredSize(new Dimension(700, 40));
+        this.data = data;
+        this.position = position;
+    }
+
     public int getCellWidth() {
         return cellWidth;
     }
@@ -52,13 +59,6 @@ public class ResultCanvas extends JComponent {
 
     public void setNonExistanceColor(Color nonExistanceColor) {
         this.nonExistanceColor = nonExistanceColor;
-    }
-
-    public ResultCanvas(Point position, java.util.List<Boolean> data) {
-        this.setMinimumSize(new Dimension(700, 40));
-        this.setPreferredSize(new Dimension(700, 40));
-        this.data = data;
-        this.position = position;
     }
 
     public ResultCanvas withCellSize(int cellSize) {
