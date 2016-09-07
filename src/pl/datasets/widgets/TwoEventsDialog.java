@@ -77,7 +77,7 @@ public class TwoEventsDialog {
                     label.setText("Choose 2 events!");
                     return;
                 }
-                eventsCallback.call(new Pair<Event, Event>(event1, event2));
+                eventsCallback.call(new Pair<>(event1, event2));
                 event1 = null;
                 event2 = null;
                 mainDialog.dispose();

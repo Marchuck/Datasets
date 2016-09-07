@@ -5,6 +5,7 @@ package pl.datasets.widgets;
  * @since 22.06.2016.
  */
 
+import com.sun.istack.internal.Nullable;
 import pl.datasets.model.StringComboBoxModel;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Strategies;
@@ -46,7 +47,7 @@ public class SelectOperationDialog extends JPanel {
         return spinner;
     }
 
-    private static JComboBox<String> addComboBox(String label, ComboBoxModel<String> model, JPanel root) {
+    public static JComboBox<String> addComboBox(String label, ComboBoxModel<String> model, JPanel root) {
         JPanel c = new JPanel(new GridLayout(2, 1));
         JLabel jLabel = new JLabel(label);
         c.add(jLabel);
@@ -59,12 +60,15 @@ public class SelectOperationDialog extends JPanel {
     }
 
     public void displayEditEventDialog(JComponent parent, final ItemCallback<Event> eventItemCallback) {
-        displayAddEventDialog(parent, eventItemCallback);
+        displayAddEventDialog(parent, "Edit", eventItemCallback);
     }
 
-
-
     public void displayAddEventDialog(JComponent parent, final ItemCallback<Event> eventCallable) {
+        displayAddEventDialog(parent, null, eventCallable);
+    }
+
+    public void displayAddEventDialog(JComponent parent, @Nullable String additionalButton,
+                                      final ItemCallback<Event> eventCallable) {
         //main dialog
         if (currentEvent == null) currentEvent = new Event();
         final JDialog mainDialog = new JDialog();
@@ -83,8 +87,7 @@ public class SelectOperationDialog extends JPanel {
                 currentEvent.setColumnIndex(-1);
                 for (int j = 0; j < comboProperty.getModel().getSize(); j++) {
                     String ss = comboProperty.getModel().getElementAt(j);
-                    if (ss.equalsIgnoreCase((String) e.getItem()))
-                        currentEvent.setColumnIndex(j);
+                    if (ss.equalsIgnoreCase((String) e.getItem())) currentEvent.setColumnIndex(j);
                 }
             }
         });
@@ -110,22 +113,38 @@ public class SelectOperationDialog extends JPanel {
                 Utils.log("onChanged " + spinnerValue.getModel().getValue());
                 if (spinnerValue.getModel() instanceof SpinnerNumberModel) {
                     currentThreshold = ((Double) spinnerValue.getModel().getValue());
-
                 } else currentThreshold = -1;
             }
         });
-        JButton jbutton = new JButton("Add");
-        jbutton.addActionListener(new ActionListener() {
 
+        JButton jbutton;
+        if (additionalButton == null) {
+            jbutton = new JButton("Add");
+        } else {
+            JButton btn = new JButton("Remove");
+            btn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    eventCallable.call(null);
+                    currentEvent = null;
+                    mainDialog.dispose();
+                    mainDialog.setVisible(false);
+                }
+            });
+            rootPanel.add(btn);
+            jbutton = new JButton("Edit");
+        }
+        jbutton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 currentEvent.setStrategy(Strategies.recognizeStrategy(currentStrategyName, currentThreshold));
                 eventCallable.call(currentEvent);
                 currentEvent = null;
+                mainDialog.dispose();
                 mainDialog.setVisible(false);
             }
         });
+
         rootPanel.add(jbutton);
         mainDialog.setMinimumSize(new Dimension(300, 200));
         mainDialog.setPreferredSize(new Dimension(300, 200));

@@ -24,6 +24,7 @@ public abstract class TrendDetectingStrategy {
     }
 
     public abstract String getOptionalThreshold();
+
     public String getName() {
         return name;
     }

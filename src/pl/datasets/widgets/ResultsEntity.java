@@ -1,5 +1,8 @@
 package pl.datasets.widgets;
 
+import javafx.util.Pair;
+import pl.datasets.model.BeforeAfterPair;
+import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
 
 import javax.swing.*;
@@ -133,6 +136,49 @@ public class ResultsEntity {
         List<Boolean> b = new ArrayList<>();
         for (int j = 0; j < i; j++) b.add(r.nextBoolean());
         return b;
+    }
+
+    public void bindAllAfter(List<BeforeAfterPair> beforeAfterPairs) {
+        String title = "";
+        JDialog window = new JDialog();
+        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        window.setTitle(title);
+        //window.setLayout(new FlowLayout());
+        //   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setBounds(30, 30, 300, 400);
+        window.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING));
+        // window.getContentPane().add(new ResultCanvas(new Point(20, 20), data));
+        // window.getContentPane().add(new JLabel("ASCENDING"));
+//        window.add(new JLabel(labelForData(_data.get(0))));
+        window.add(new ResultCanvas(new Point(20, 20), beforeAfterPairs, true).withExistanceColor(Color.MAGENTA));
+        //     new ArrayList<Event>(){{add(columnStrategyPair);}}
+
+        window.pack();
+        window.setLocationByPlatform(true);
+        window.setVisible(true);
+    }
+
+    public void bindSeparated(List<Pair<Event, List<Boolean>>> sliced) {
+        String title = "";
+        JDialog window = new JDialog();
+        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        window.setTitle(title);
+        //window.setLayout(new FlowLayout());
+        //   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setBounds(30, 30, 300, 400);
+        window.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING));
+        // window.getContentPane().add(new ResultCanvas(new Point(20, 20), data));
+        // window.getContentPane().add(new JLabel("ASCENDING"));
+//        window.add(new JLabel(labelForData(_data.get(0))));
+        for (Pair<Event, List<Boolean>> pair : sliced) {
+            window.getContentPane().add(new JLabel(pair.getKey().toString()));
+            window.getContentPane().add(new ResultCanvas(new Point(20, 20), pair.getValue()));
+        }
+        //     new ArrayList<Event>(){{add(columnStrategyPair);}}
+
+        window.pack();
+        window.setLocationByPlatform(true);
+        window.setVisible(true);
     }
 }
 

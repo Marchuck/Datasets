@@ -1,11 +1,14 @@
 package pl.datasets.trend_match;
 
+import javafx.util.Pair;
 import pl.datasets.model.BeforeAfterPair;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.Event;
+import pl.datasets.utils.Strategies;
 import pl.datasets.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,25 +18,26 @@ import java.util.List;
  */
 public class TrendingSubsetWrapper {
 
+
     public static final String TAG = TrendingSubsetWrapper.class.getSimpleName();
     private List<DatasetItem> dataset;
     private List<List<Long>> trendsList = new ArrayList<>();
     private List<Long> singleTrendList = new ArrayList<>();
     private List<DatasetItem> tempWorkingList = new ArrayList<>();
-
-
     private int minTrendLength = 2;
-
     private TrendingSubsetWrapper(List<DatasetItem> dataset) {
         this.dataset = dataset;
 
         printDatasetSummary(dataset);
     }
 
+    public static void main(String[] args) {
+        new TestSuite().test();
+    }
+
     public static TrendingSubsetWrapper getInstance(List<DatasetItem> dataset) {
         return new TrendingSubsetWrapper(dataset);
     }
-
 
     /**
      * Set minimal length of the searched trend
@@ -62,14 +66,17 @@ public class TrendingSubsetWrapper {
 //        return getTrends(Collections.singletonList(columnStrategyPair), getAbsenceOfTrend);
     }
 
-
-    public List<Boolean> eval(final Event columnStrategyPair) {
+    public List<Boolean> evaluate(final Event columnStrategyPair) {
         List<Boolean> trending = new ArrayList<>();
         int index = columnStrategyPair.getColumnIndex();
         for (DatasetItem d : dataset) {
             trending.add(columnStrategyPair.getStrategy().hasTrend(d, index));
         }
         return trending;
+    }
+
+    public Pair<List<List<Long>>, List<List<Long>>> getAllTrends(List<Event> columnStrategyPairs) {
+        return new Pair<>(getTrends(columnStrategyPairs, false), getTrends(columnStrategyPairs, true));
     }
 
     public List<List<Long>> getTrends(List<Event> columnStrategyPairs, boolean getAbsenceOfTrend) {
@@ -81,7 +88,7 @@ public class TrendingSubsetWrapper {
         } else {
             findAbsenceOfTrends(columnStrategyPairs);
         }
-        if (null != trendsList && trendsList.size() > 0) {
+        if (trendsList.size() > 0) {
 
             System.out.print("\n");
             System.out.print("\n Items with given trend: ");
@@ -93,8 +100,9 @@ public class TrendingSubsetWrapper {
                     }
                 }
             }
+
+            Utils.log("Returning list containing " + trendsList.size() + " elements");
         }
-        Utils.log("Returning list containing " + trendsList.size() + " elements");
         return trendsList;
     }
 
@@ -133,7 +141,6 @@ public class TrendingSubsetWrapper {
         }
         return causationList;
     }
-
 
     private void findTrends(List<Event> columnStrategyPairs) {
 
@@ -196,7 +203,6 @@ public class TrendingSubsetWrapper {
         putTrendDelimiter();
     }
 
-
     public boolean checkIfMatchesTrend(List<DatasetItem> trendCandidate, List<Event> columnStrategyPairs) {
 
         for (Event pair : columnStrategyPairs) {
@@ -207,7 +213,6 @@ public class TrendingSubsetWrapper {
         return true;
 
     }
-
 
     private void putDiscoveredTrend(List<DatasetItem> trend) {
 
@@ -244,8 +249,37 @@ public class TrendingSubsetWrapper {
 
             }
         }
+    }
 
+    private static class TestSuite {
 
+        public void test() {
+            System.out.println("Testing #1");
+            Event event = new Event(new Strategies.LessThanStrategy(4), 4);
+            TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(hardCodedSet());
+            for (List<Long> singleTrend : wrapper.getTrends(event, true)) {
+                System.out.print("\n");
+                if (singleTrend.size() > 0) {
+                    for (Long item : singleTrend) {
+                        System.out.print(String.valueOf(item) + " ");
+                    }
+                }
+            }
+        }
+
+        private List<DatasetItem> hardCodedSet() {
+            List<DatasetItem> listOfDatasetItems = new ArrayList<>();
+            listOfDatasetItems.add(new DatasetItem(1, Arrays.asList(1d, 100d, 3d, 4d, 0d)));
+            listOfDatasetItems.add(new DatasetItem(2, Arrays.asList(2d, 90d, 3d, 4d, 0d)));
+            listOfDatasetItems.add(new DatasetItem(3, Arrays.asList(3d, 80d, 3d, 4d, 0d)));
+            listOfDatasetItems.add(new DatasetItem(4, Arrays.asList(4d, 70d, 3d, 4d, 0d)));
+            listOfDatasetItems.add(new DatasetItem(5, Arrays.asList(5d, 60d, 0d, 4d, 0d)));
+            listOfDatasetItems.add(new DatasetItem(6, Arrays.asList(6d, 50d, 0d, 4d, 0d)));
+            listOfDatasetItems.add(new DatasetItem(7, Arrays.asList(7d, 40d, 0d, 4d, 0d)));
+            listOfDatasetItems.add(new DatasetItem(8, Arrays.asList(8d, 30d, 0d, 4d, 0d)));
+            listOfDatasetItems.add(new DatasetItem(9, Arrays.asList(9d, 20d, 0d, 4d, 0d)));
+            return listOfDatasetItems;
+        }
     }
 }
 

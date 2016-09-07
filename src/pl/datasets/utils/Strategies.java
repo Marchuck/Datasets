@@ -144,7 +144,7 @@ public class Strategies {
 
         double threshold;
 
-        GreaterThanStrategy(double threshold) {
+        public GreaterThanStrategy(double threshold) {
             super("Greater than");
             this.threshold = threshold;
         }
@@ -182,7 +182,7 @@ public class Strategies {
 
         double threshold;
 
-        LessThanStrategy(double threshold) {
+        public LessThanStrategy(double threshold) {
             super("Less than");
             this.threshold = threshold;
         }
@@ -190,16 +190,13 @@ public class Strategies {
         @Override
         public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
 
-
             if (candidate.size() == 1) {
                 return true;
             } else if (candidate.size() > 1) {
 
-                DatasetItem item;
-
                 for (int i = 0; i < candidate.size() - 1; i++) {
 
-                    item = candidate.get(i);
+                    DatasetItem item = candidate.get(i);
 
                     if (Double.compare(item.getValues().get(columnId), threshold) != -1) {
                         return false;
@@ -207,7 +204,6 @@ public class Strategies {
                 }
             }
             return true;
-
         }
 
         @Override
@@ -220,7 +216,7 @@ public class Strategies {
 
         double threshold;
 
-        EqualsStrategy(double threshold) {
+        public EqualsStrategy(double threshold) {
             super("Equals");
             this.threshold = threshold;
         }

@@ -1,7 +1,10 @@
 package pl.datasets.widgets;
 
+import pl.datasets.model.BeforeAfterPair;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 
 /**
@@ -21,12 +24,17 @@ public class ResultCanvas extends JComponent {
     private Color existanceColor = Color.YELLOW;
     private Color nonExistanceColor = Color.LIGHT_GRAY;
     private Color separatorColor = Color.BLACK;
+    private boolean manyColorsEnabled;
 
     public ResultCanvas(Point position, java.util.List<Boolean> data) {
 //        this.setMinimumSize(new Dimension(300, 40));
         this.setPreferredSize(new Dimension(300, 40));
         this.data = data;
         this.position = position;
+    }
+
+    public ResultCanvas(Point position, List<BeforeAfterPair> beforeAfterPairs, boolean b) {
+        this.manyColorsEnabled = b;
     }
 
     public int getCellWidth() {
@@ -66,6 +74,11 @@ public class ResultCanvas extends JComponent {
         return this;
     }
 
+    public ResultCanvas withManyColorsEnabled() {
+        this.manyColorsEnabled = true;
+        return this;
+    }
+
     public ResultCanvas withExistanceColor(Color existanceColor) {
         setExistanceColor(existanceColor);
         return this;
@@ -78,10 +91,11 @@ public class ResultCanvas extends JComponent {
 
     @Override
     public void paint(Graphics g) {
+        int index = 0;
         for (int j = 0; j < data.size(); j++) {
             boolean drawthisElement = data.get(j);
             if (drawthisElement) {
-                g.setColor(existanceColor);
+                g.setColor(manyColorsEnabled ? nextColor(index) : existanceColor);
                 g.fillRect(position.x + cellWidth * j, position.y, cellWidth, cellHeight);
             } else {
                 g.setColor(nonExistanceColor);
@@ -89,8 +103,12 @@ public class ResultCanvas extends JComponent {
             }
             g.setColor(Color.BLACK);
             g.drawLine(position.x + cellWidth * j, position.y + 1, position.x + cellWidth * j, position.y + cellHeight - 1);
-
+            index++;
         }
+    }
+
+    private Color nextColor(int index) {
+        return null;
     }
 }
 

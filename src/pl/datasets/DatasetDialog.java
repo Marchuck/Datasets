@@ -76,10 +76,13 @@ public class DatasetDialog extends JFrame {
                     @Override
                     public void call(Pair<Event, Event> event) {
                         TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
-                        List<BeforeAfterPair> beforeAfterPairs = wrapper.findAfter(event.getKey(), event.getValue(), 8);
+                        List<BeforeAfterPair> beforeAfterPairs = wrapper.findAfter(event.getKey(), event.getValue(), 20);
                         for (BeforeAfterPair a : beforeAfterPairs) {
                             Utils.log(a.toString());
                         }
+
+
+                        new ResultsEntity().bindAllAfter(beforeAfterPairs);
                     }
                 });
             }
@@ -96,6 +99,12 @@ public class DatasetDialog extends JFrame {
                 List<List<Boolean>> bols = new ArrayList<>();
                 List<Event> events = getEventsFromModel();
 
+
+                List<Pair<Event, List<Boolean>>> sliced = new ArrayList<Pair<Event, List<Boolean>>>();
+                for (Event event : events) {
+                    sliced.add(new Pair<Event, List<Boolean>>(event, wrapper.evaluate(event)));
+                }
+
                 if (events.size() > 1) {
                     List<List<Long>> results = wrapper.getTrends(events, false);
                     //result combined from all outputs
@@ -103,7 +112,7 @@ public class DatasetDialog extends JFrame {
                 }
 
                 for (Event ev : events) {
-                    bols.add(wrapper.eval(ev));
+                    bols.add(wrapper.evaluate(ev));
                     List<List<Long>> trends = wrapper.getTrends(ev, false);
                     for (List<Long> l : trends)
 //                        Utils.log(Arrays.toString(CSVReader.genericlistToArray(l, new CSVReader.Bie<Long>() {
@@ -122,7 +131,8 @@ public class DatasetDialog extends JFrame {
 //                new ResultsEntity().bind(results);
 
 
-                new ResultsEntity().bindAll(resultsOfAllSingleWrapperOutput);
+//                new ResultsEntity().bindAll(resultsOfAllSingleWrapperOutput);
+                new ResultsEntity().bindSeparated(sliced);
             }
         });
     }
