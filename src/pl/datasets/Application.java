@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @author Lukasz
- * @since 26.05.2016.
+ * @since 26.05.2016
  */
 public class Application {
     public static Application instance;
