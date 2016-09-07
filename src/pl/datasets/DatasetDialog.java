@@ -1,8 +1,6 @@
 package pl.datasets;
 
 import com.sun.istack.internal.Nullable;
-import javafx.util.Pair;
-import pl.datasets.model.BeforeAfterPair;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
@@ -29,7 +27,6 @@ public class DatasetDialog extends JFrame {
     private JButton addButton;
     private JButton computeButton;
     private JList<Event> operationsList;
-    private JButton beforeAfterButton;
     private List<DatasetItem> items;
     private SelectOperationDialog selectOperationDialog;
     private String[] properties;
@@ -76,13 +73,10 @@ public class DatasetDialog extends JFrame {
                     @Override
                     public void call(Pair<Event, Event> event) {
                         TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
-                        List<BeforeAfterPair> beforeAfterPairs = wrapper.findAfter(event.getKey(), event.getValue(), 20);
+                        List<BeforeAfterPair> beforeAfterPairs = wrapper.findAfter(event.getKey(), event.getValue(), 8);
                         for (BeforeAfterPair a : beforeAfterPairs) {
                             Utils.log(a.toString());
                         }
-
-
-                        new ResultsEntity().bindAllAfter(beforeAfterPairs);
                     }
                 });
             }

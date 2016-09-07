@@ -144,7 +144,7 @@ public class TrendingSubsetWrapper {
 
     private void findTrends(List<Event> columnStrategyPairs) {
 
-        setMinTrendLength(1);
+        setMinTrendLength(2);
 
 
         for (DatasetItem item : dataset) {
@@ -211,7 +211,6 @@ public class TrendingSubsetWrapper {
             }
         }
         return true;
-
     }
 
     private void putDiscoveredTrend(List<DatasetItem> trend) {
