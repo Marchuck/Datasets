@@ -1,6 +1,7 @@
 package pl.datasets;
 
 import pl.datasets.model.DatasetItem;
+import pl.datasets.widgets.the_very_main_dialog.ChooseAlgorithmDialog;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ public class Application {
     public JFrame currentUsedFrame;
 
     private Application() {
-        currentUsedFrame = new MainDatasetOperationFrame().getDialog();
+//        currentUsedFrame =
+//        new MainDatasetOperationFrame().getDialog();
+        new ChooseAlgorithmDialog();
     }
 
     public static Application getInstance() {

@@ -7,7 +7,11 @@ import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.CsvSave;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
+import pl.datasets.widgets.event_search.Behaviour;
+import pl.datasets.widgets.event_search.EventBasedDatasetDialog;
+import pl.datasets.widgets.implication.ImplicationDatasetDialog;
 
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +36,7 @@ public class MainDatasetOperationFrame {
         //dialog= getDialog();
     }
 
+
     public static void main(String[] args) {
         new MainDatasetOperationFrame().getDialog();
 //        List<DatasetItem> data = new MainDatasetOperationFrame(true).getFulldataSet(true);
@@ -50,11 +55,31 @@ public class MainDatasetOperationFrame {
         return Collections.min(sizes);
     }
 
+
+    public DatasetDialog getDialog(Behaviour behaviour) {
+        List<DatasetItem> dataset = getFulldataSet(true);
+//        save(dataset,"dataset");
+        String[] properties = CSVReader.listToArray(dataset.get(0).getProperties());
+        String[] strategies = new String[]{"++", "--", ">", "<", "==", "<=", ">="};
+
+        if (behaviour == Behaviour.EVENT_BASED) {
+            return new EventBasedDatasetDialog("Event-Chained behaviour", dataset, properties, strategies);
+        } else if (behaviour == Behaviour.IMPLICATION) {
+            return new ImplicationDatasetDialog("Implication behaviour", dataset, properties, strategies);
+        } else throw new RuntimeException("UNSUPPORTED enum type: " + behaviour.name());
+    }
+
+    @Deprecated
     public DatasetDialog getDialog() {
         List<DatasetItem> dataset = getFulldataSet(true);
 //        save(dataset,"dataset");
         String[] properties = CSVReader.listToArray(dataset.get(0).getProperties());
-        return new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="});
+        return new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="}) {
+            @Override
+            public ActionListener computeButtonClickListener() {
+                throw new UnsupportedOperationException("NOT ALLOWED HERE, use getDialog(Behaviour) instead");
+            }
+        };
     }
 
     public void save(List<DatasetItem> dataset, String filename) {

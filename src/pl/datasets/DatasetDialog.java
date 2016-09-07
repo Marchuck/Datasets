@@ -8,6 +8,7 @@ import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
 import pl.datasets.widgets.*;
+import pl.datasets.widgets.event_search.ComputeButtonBehaviour;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author Lukasz
  * @since 26.05.2016.
  */
-public class DatasetDialog extends JFrame {
+public abstract class DatasetDialog extends JFrame implements ComputeButtonBehaviour {
 
     //    private List<Event> events = new ArrayList<>();
     private JPanel panel1;
@@ -68,6 +69,7 @@ public class DatasetDialog extends JFrame {
         setupList();
     }
 
+    //todo: JOHANNES implement for n elements
     private void setupBeforeAfterButton() {
         beforeAfterButton.addActionListener(new ActionListener() {
             @Override

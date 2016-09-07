@@ -34,7 +34,7 @@ public class MainGUIForm extends JFrame implements OnFileLoadedListener, OnFileC
         list1.setModel(listModel);
         list1.setCellRenderer(new PanelRenderer<>());
         list1.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        //   list1.setBackground(Color.cyan);
+        //   list1.setBackground(Color,.cyan);
         // list1.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         //JScrollPane listScroller = new JScrollPane(list1);
         //listScroller.setPreferredSize(new Dimension(250, 80));
