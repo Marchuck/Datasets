@@ -46,7 +46,6 @@ public class MainDatasetOperationFrame {
 //        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy("--"), 2));
 //        columnStrategyPairs.add(new ColumnStrategyPair(Strategies.recognizeStrategy(">", 20), 1));
 //        trend.getTrends(columnStrategyPairs);
-
     }
 
     private static <X> int getMinSize(List<List<X>> sets) {
