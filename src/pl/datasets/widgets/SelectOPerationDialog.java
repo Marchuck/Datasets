@@ -6,6 +6,9 @@ package pl.datasets.widgets;
  */
 
 import com.sun.istack.internal.Nullable;
+import javafx.util.Pair;
+import pl.datasets.model.DatasetExtensions;
+import pl.datasets.model.DatasetItem;
 import pl.datasets.model.StringComboBoxModel;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Strategies;
@@ -36,7 +39,7 @@ public class SelectOperationDialog extends JPanel {
         this.operations = operations;
     }
 
-    private static JSpinner addSpinner(String label, SpinnerModel model, JPanel root) {
+    private static Object[] addSpinner(String label, SpinnerModel model, JPanel root) {
         JPanel c = new JPanel(new GridLayout(2, 1));
         JLabel l = new JLabel(label);
         c.add(l);
@@ -44,7 +47,7 @@ public class SelectOperationDialog extends JPanel {
         l.setLabelFor(spinner);
         c.add(spinner);
         root.add(c);
-        return spinner;
+        return new Object[]{spinner, model};
     }
 
     public static JComboBox<String> addComboBox(String label, ComboBoxModel<String> model, JPanel root) {
@@ -59,15 +62,16 @@ public class SelectOperationDialog extends JPanel {
         return comboBox;
     }
 
-    public void displayEditEventDialog(JComponent parent, final ItemCallback<Event> eventItemCallback) {
-        displayAddEventDialog(parent, "Edit", eventItemCallback);
+    public void displayEditEventDialog(java.util.List<DatasetItem> datasetItemList, JComponent parent, final ItemCallback<Event> eventItemCallback) {
+
+        displayAddEventDialog(datasetItemList, parent, "Edit", eventItemCallback);
     }
 
-    public void displayAddEventDialog(JComponent parent, final ItemCallback<Event> eventCallable) {
-        displayAddEventDialog(parent, null, eventCallable);
+    public void displayAddEventDialog(java.util.List<DatasetItem> datasetItemList, JComponent parent, final ItemCallback<Event> eventCallable) {
+        displayAddEventDialog(datasetItemList, parent, null, eventCallable);
     }
 
-    public void displayAddEventDialog(JComponent parent, @Nullable String additionalButton,
+    public void displayAddEventDialog(final java.util.List<DatasetItem> datasetItemList, JComponent parent, @Nullable String additionalButton,
                                       final ItemCallback<Event> eventCallable) {
         //main dialog
         if (currentEvent == null) currentEvent = new Event();
@@ -79,6 +83,11 @@ public class SelectOperationDialog extends JPanel {
         //first combo-box: choose
         final ComboBoxModel<String> comboPropertiesModel = new StringComboBoxModel(propertiesToSelect);
         final JComboBox<String> comboProperty = addComboBox("Property", comboPropertiesModel, rootPanel);
+        final Object[] spinnerData =
+                addSpinner("", new SpinnerNumberModel(40f, 0f, 100f, 1f), rootPanel);
+        final JSpinner valueRangeSpinner = (JSpinner) spinnerData[0];
+        final SpinnerNumberModel spinnerModel = (SpinnerNumberModel) spinnerData[1];
+
         comboProperty.setMinimumSize(new Dimension(50, 15));
         comboProperty.addItemListener(new ItemListener() {
             @Override
@@ -87,7 +96,17 @@ public class SelectOperationDialog extends JPanel {
                 currentEvent.setColumnIndex(-1);
                 for (int j = 0; j < comboProperty.getModel().getSize(); j++) {
                     String ss = comboProperty.getModel().getElementAt(j);
-                    if (ss.equalsIgnoreCase((String) e.getItem())) currentEvent.setColumnIndex(j);
+                    if (ss.equalsIgnoreCase((String) e.getItem())) {
+                        currentEvent.setColumnIndex(j);
+
+                        Pair<Double, Double> minAndMax = DatasetExtensions
+                                .getPropertyRange(j, datasetItemList);
+                        double min = minAndMax.getKey();
+                        double max = minAndMax.getValue();
+                        spinnerModel.setMinimum(min);
+                        spinnerModel.setMaximum(max);
+                        spinnerModel.setValue((min + max) / 2);
+                    }
                 }
             }
         });
@@ -105,14 +124,13 @@ public class SelectOperationDialog extends JPanel {
             }
         });
 
-        final JSpinner spinnerValue = addSpinner("", new SpinnerNumberModel(40f, 0f, 100f, 1f), rootPanel);
 
-        spinnerValue.addChangeListener(new ChangeListener() {
+        valueRangeSpinner.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                Utils.log("onChanged " + spinnerValue.getModel().getValue());
-                if (spinnerValue.getModel() instanceof SpinnerNumberModel) {
-                    currentThreshold = ((Double) spinnerValue.getModel().getValue());
+                Utils.log("spinnerValue onChanged " + valueRangeSpinner.getModel().getValue());
+                if (valueRangeSpinner.getModel() instanceof SpinnerNumberModel) {
+                    currentThreshold = ((Double) valueRangeSpinner.getModel().getValue());
                 } else currentThreshold = -1;
             }
         });

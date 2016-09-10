@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="rxjava-1.1.10">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/rxjava-1.1.10.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ideaLibSources/rxjava-1.1.10-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
