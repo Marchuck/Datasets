@@ -17,6 +17,7 @@ public class DatasetItem {
         this.values = values;
     }
 
+
     public DatasetItem(long timestamp, Double value) {
         this.timestamp = timestamp;
 

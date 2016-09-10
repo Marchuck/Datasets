@@ -17,6 +17,11 @@ public class EventBasedDatasetDialog extends DatasetDialog implements ComputeBut
         super(path, items, propertyNames, operations);
     }
 
+    /**
+     * note:
+     *
+     * @return compute button uses this implementation to perform calculations
+     */
     @Override
     public ActionListener computeButtonClickListener() {
         return new ActionListener() {
@@ -30,8 +35,6 @@ public class EventBasedDatasetDialog extends DatasetDialog implements ComputeBut
                 //compute here and pass result when you will be creating
                 // ImplicationDatasetDialog
                 //just invoke:
-
-
                 //note: break private->protected to get access to data from super class
             }
         };

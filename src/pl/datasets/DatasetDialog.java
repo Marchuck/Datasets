@@ -31,15 +31,15 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
     private JButton computeButton;
     private JList<Event> operationsList;
     private JButton beforeAfterButton;
-    private List<DatasetItem> items;
+    private List<DatasetItem> datasetItems;
     private SelectOperationDialog selectOperationDialog;
     private String[] properties;
     private DefaultListModel<Event> model = new DefaultListModel<>();
 
-    public DatasetDialog(String path, List<DatasetItem> items, String[] propertyNames, String[] operations) {
+    public DatasetDialog(String path, List<DatasetItem> datasetItems, String[] propertyNames, String[] operations) {
         super(path);
         setContentPane(panel1);
-        this.items = items;
+        this.datasetItems = datasetItems;
         this.properties = getAttributeNames(propertyNames);
         selectOperationDialog = new SelectOperationDialog(properties, operations);
         init();
@@ -77,7 +77,7 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
                 new TwoEventsDialog().chooseTwo(beforeAfterButton, getEventsFromModel(), new ItemCallback<Pair<Event, Event>>() {
                     @Override
                     public void call(Pair<Event, Event> event) {
-                        TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
+                        TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
                         List<BeforeAfterPair> beforeAfterPairs = wrapper.findAfter(event.getKey(), event.getValue(), 8);
                         for (BeforeAfterPair a : beforeAfterPairs) {
                             Utils.log(a.toString());
@@ -92,7 +92,7 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
         computeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(items);
+                TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
                 wrapper.setMinTrendLength(2);
                 List<List<List<Long>>> resultsOfAllSingleWrapperOutput = new ArrayList<>();
                 List<List<Boolean>> bols = new ArrayList<>();
@@ -134,6 +134,14 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
                 new ResultsEntity().bindSeparated(sliced);
             }
         });
+        //todo: JOHANNES
+        /**
+         * put implementation above to class extending from this class:
+         * ({@link pl.datasets.widgets.event_search.EventBasedDatasetDialog})
+         *              OR
+         * ({@link pl.datasets.widgets.implication.ImplicationDatasetDialog})
+         **/
+        computeButton.addActionListener(computeButtonClickListener());
     }
 
     /**
@@ -149,7 +157,7 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                selectOperationDialog.displayAddEventDialog(addButton, new ItemCallback<Event>() {
+                selectOperationDialog.displayAddEventDialog(datasetItems, addButton, new ItemCallback<Event>() {
                     @Override
                     public void call(@Nullable Event event) {
                         if (event == null) return;
@@ -172,22 +180,23 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
             @Override
             public void mouseClicked(MouseEvent evt) {
                 JList list = (JList) evt.getSource();
-                if (evt.getClickCount() == 2) {
-                    Utils.log("double click");
-                    /***DOUBLE CLICK - REMOVE {@link Event} from list*/
+                int index = list.locationToIndex(evt.getPoint());
+                if (index > -1) {
 
-                    int index = list.locationToIndex(evt.getPoint());
-                    Utils.log("clicked twice on " + index);
-                    removeElementFromList(index);
-                }
-                if (evt.getClickCount() == 1) {
-                    Utils.log("click");
+                    if (evt.getClickCount() == 2) {
+                        Utils.log("double click");
+                        /***DOUBLE CLICK - REMOVE {@link Event} from list*/
+                        Utils.log("clicked twice on " + index);
+                        removeElementFromList(index);
+                    }
+                    if (evt.getClickCount() == 1) {
+                        Utils.log("click");
 
-                    /***SINGLE CLICK - EDIT {@link Event} from list*/
+                        /***SINGLE CLICK - EDIT {@link Event} from list*/
 
-                    int index = list.locationToIndex(evt.getPoint());
-                    Utils.log("clicked " + index);
-                    buildEditEventDialog(index);
+                        Utils.log("clicked " + index);
+                        buildEditEventDialog(index);
+                    }
                 }
             }
         });
@@ -207,7 +216,7 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
 
     private void buildEditEventDialog(final int indexOfSelectedItem) {
         Utils.log("buildEditEventDialog(" + indexOfSelectedItem + ")");
-        selectOperationDialog.displayEditEventDialog(addButton, new ItemCallback<Event>() {
+        selectOperationDialog.displayEditEventDialog(datasetItems, addButton, new ItemCallback<Event>() {
             public void call(Event event) {
                 if (event == null) {
                     model.remove(indexOfSelectedItem);

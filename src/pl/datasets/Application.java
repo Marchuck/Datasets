@@ -19,6 +19,8 @@ public class Application {
 //        currentUsedFrame =
 //        new MainDatasetOperationFrame().getDialog();
         new ChooseAlgorithmDialog();
+
+
     }
 
     public static Application getInstance() {
