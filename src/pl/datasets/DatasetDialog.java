@@ -31,7 +31,7 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
     private JButton computeButton;
     private JList<Event> operationsList;
     private JButton beforeAfterButton;
-    private List<DatasetItem> datasetItems;
+    protected List<DatasetItem> datasetItems;
     private SelectOperationDialog selectOperationDialog;
     private String[] properties;
     private DefaultListModel<Event> model = new DefaultListModel<>();
@@ -89,51 +89,8 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
     }
 
     private void setupComputeButton() {
-        computeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
-                wrapper.setMinTrendLength(2);
-                List<List<List<Long>>> resultsOfAllSingleWrapperOutput = new ArrayList<>();
-                List<List<Boolean>> bols = new ArrayList<>();
-                List<Event> events = getEventsFromModel();
 
 
-                List<Pair<Event, List<Boolean>>> sliced = new ArrayList<Pair<Event, List<Boolean>>>();
-                for (Event event : events) {
-                    sliced.add(new Pair<Event, List<Boolean>>(event, wrapper.evaluate(event)));
-                }
-
-                if (events.size() > 1) {
-                    List<List<Long>> results = wrapper.getTrends(events, false);
-                    //result combined from all outputs
-                    resultsOfAllSingleWrapperOutput.add(results);
-                }
-
-                for (Event ev : events) {
-                    bols.add(wrapper.evaluate(ev));
-                    List<List<Long>> trends = wrapper.getTrends(ev, false);
-                    for (List<Long> l : trends)
-//                        Utils.log(Arrays.toString(CSVReader.genericlistToArray(l, new CSVReader.Bie<Long>() {
-//                            @Override
-//                            public Long[] create(int capacity) {
-//                                return new Long[capacity];
-//                            }
-//                        })));
-                        resultsOfAllSingleWrapperOutput.add(trends);
-                }
-                for (int j = 0; j < resultsOfAllSingleWrapperOutput.size(); j++) {
-
-                }
-//                List<List<Long>> results1 = wrapper.getTrends(, false);
-//                res.add(results);
-//                new ResultsEntity().bind(results);
-
-
-//                new ResultsEntity().bindAll(resultsOfAllSingleWrapperOutput);
-                new ResultsEntity().bindSeparated(sliced);
-            }
-        });
         //todo: JOHANNES
         /**
          * put implementation above to class extending from this class:
@@ -147,7 +104,7 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
     /**
      * @return events extracted from list's model
      */
-    private List<Event> getEventsFromModel() {
+    protected List<Event> getEventsFromModel() {
         List<Event> events = new ArrayList<>();
         for (int j = 0; j < model.size(); j++) events.add(model.getElementAt(j));
         return events;

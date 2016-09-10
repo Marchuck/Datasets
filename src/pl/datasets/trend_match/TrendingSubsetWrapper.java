@@ -280,5 +280,9 @@ public class TrendingSubsetWrapper {
             return listOfDatasetItems;
         }
     }
+
+    public List<DatasetItem> getDataset() {
+        return dataset;
+    }
 }
 

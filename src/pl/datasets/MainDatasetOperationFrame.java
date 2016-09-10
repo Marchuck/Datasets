@@ -175,7 +175,8 @@ public class MainDatasetOperationFrame {
         return new DatasetDialog("Datasets", dataset, properties, new String[]{"++", "--", ">", "<", "==", "<=", ">="}) {
             @Override
             public ActionListener computeButtonClickListener() {
-                throw new UnsupportedOperationException("NOT ALLOWED HERE, use getDialog(Behaviour) instead");
+//                throw new UnsupportedOperationException("NOT ALLOWED HERE, use getDialog(Behaviour) instead");
+                return null;
             }
         };
     }
