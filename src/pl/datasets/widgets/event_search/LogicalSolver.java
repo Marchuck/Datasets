@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class LogicalSolver {
 
-    public static List<List<Long>> resolveAnd(List<List<Long>> firstSet, List<List<Long>> secondSet, int minTrendLength) {
+    private static List<List<Long>> resolveAnd(List<List<Long>> firstSet, List<List<Long>> secondSet, int minTrendLength) {
         List<List<Long>> result = new ArrayList<>();
 
         List<Long> tempItem = new ArrayList<>();
@@ -41,7 +41,7 @@ public class LogicalSolver {
         return result;
     }
 
-    public static List<List<Long>> resolveOr(List<List<Long>> firstSet, List<List<Long>> secondSet, int datasetLength) {
+    private static List<List<Long>> resolveOr(List<List<Long>> firstSet, List<List<Long>> secondSet, int datasetLength) {
 
 
         List<List<Long>> result = new ArrayList<>();
@@ -74,15 +74,15 @@ public class LogicalSolver {
         return result;
     }
 
-    public static List<List<Long>> evaluate(String relationship, List<List<Long>> firstSet, List<List<Long>> secondSet, int minTrendLength, int datasetLength) {
+    static List<List<Long>> evaluate(String relationship, List<List<Long>> firstSet, List<List<Long>> secondSet, int minTrendLength, int datasetLength) {
 
         switch (relationship){
             case "AND":
                 return resolveAnd(firstSet,secondSet,minTrendLength);
             case "OR":
-                return resolveAnd(firstSet,secondSet,datasetLength);
+                return resolveOr(firstSet,secondSet,datasetLength);
             default:
-                return resolveAnd(firstSet,secondSet,minTrendLength);
+                throw  new UnsupportedOperationException("Not supporting such logical relationship");
         }
     }
 

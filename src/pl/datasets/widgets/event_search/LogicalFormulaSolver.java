@@ -27,12 +27,12 @@ public class LogicalFormulaSolver {
 
     public List<List<Long>> evaluate(List<Event> events, List<String> relationships){
         if (events.size()>2&&relationships.size()>0){
-            //TODO test implementation of recurring algorithm
+            //TODO @johannes test implementation of recurring algorithm
             return LogicalSolver.evaluate(relationships.get(relationships.size()-1),
                     wrapper.getTrends(events.get(events.size()-1),false),
-                    evaluate(events.subList(0,events.size()-1),
+                    evaluate(events.subList(0,events.size()-2),
                             relationships.subList(0,
-                                    relationships.size()-1)),
+                                    relationships.size()-2)),
                     2,
                     wrapper.getDataset().size());
         }else

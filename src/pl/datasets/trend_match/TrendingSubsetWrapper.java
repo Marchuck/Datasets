@@ -25,6 +25,7 @@ public class TrendingSubsetWrapper {
     private List<Long> singleTrendList = new ArrayList<>();
     private List<DatasetItem> tempWorkingList = new ArrayList<>();
     private int minTrendLength = 2;
+
     private TrendingSubsetWrapper(List<DatasetItem> dataset) {
         this.dataset = dataset;
 
@@ -140,6 +141,46 @@ public class TrendingSubsetWrapper {
             }
         }
         return causationList;
+    }
+
+    public List<List<Long>> findChainedEventsOccurences(List<Event> chainedEvents, int allowedOffset) {
+
+        List<List<Long>> implicationCandidates = new ArrayList<>();
+
+        for (DatasetItem item : dataset) {
+            for (Event singleEvent : chainedEvents) {
+                if (singleEvent.hasTrend(item)) {
+                    if (chainedEvents.indexOf(singleEvent) == 0) {
+                        implicationCandidates.add(initNewLongList(item));
+                    } else {
+                        for (List<Long> candidate : implicationCandidates) {
+                            if (candidate.size() == chainedEvents.indexOf(singleEvent) && item.getTimestamp() - candidate.get(candidate.size() - 1) <= allowedOffset) {
+                                candidate.add(item.getTimestamp());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return reduceCandidates(chainedEvents, implicationCandidates);
+    }
+
+
+    private List<List<Long>> reduceCandidates(List<Event> chainedEvents, List<List<Long>> implicationCandidates) {
+
+        for (List<Long> candidate : implicationCandidates) {
+            if (candidate.size() != chainedEvents.size()) {
+                implicationCandidates.remove(candidate);
+            }
+        }
+        return implicationCandidates;
+    }
+
+    private List<Long> initNewLongList(DatasetItem item) {
+        ArrayList<Long> result = new ArrayList<>();
+        result.add(item.getTimestamp());
+        return result;
     }
 
     private void findTrends(List<Event> columnStrategyPairs) {
