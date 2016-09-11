@@ -11,25 +11,25 @@ import java.util.List;
 public class ImplicationSolverDialog extends JFrame {
 
     private JPanel rootPanel;
-    private JList<List<String>> swingList;
+    private JList<List<Long>> swingList;
 
-    private DefaultListModel<List<String>> resultedDatasetModel = new DefaultListModel<>();
+    private DefaultListModel<List<Long>> resultedDatasetModel = new DefaultListModel<>();
 
-    public ImplicationSolverDialog(List<List<String>> outputDataset) {
+    public ImplicationSolverDialog(List<List<Long>> outputDataset, int[] indexes) {
         super();
         setContentPane(rootPanel);
 
-        initViews(outputDataset);
+        initViews(outputDataset, indexes);
         initDefaultConfig();
     }
 
-    private void initViews(List<List<String>> ouptputDataset) {
-        for (List<String> list : ouptputDataset) {
+    private void initViews(List<List<Long>> ouptputDataset, int[] indexes) {
+        for (List<Long> list : ouptputDataset) {
             resultedDatasetModel.addElement(list);
         }
         swingList.setModel(resultedDatasetModel);
         //optional: change default appearance of list's cells
-        swingList.setCellRenderer(new ImplicationCellRenderer());
+        swingList.setCellRenderer(new ImplicationCellRenderer(indexes));
         //swingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
     }
 

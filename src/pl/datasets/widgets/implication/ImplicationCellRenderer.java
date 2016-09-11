@@ -1,5 +1,7 @@
 package pl.datasets.widgets.implication;
 
+import pl.datasets.utils.Utils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -11,13 +13,13 @@ import java.util.List;
  * @since 07.09.2016.
  */
 //todo: change visibility to expose important indexes
-public class ImplicationCellRenderer implements ListCellRenderer<List<String>> {
+public class ImplicationCellRenderer implements ListCellRenderer<List<Long>> {
     private int[] indexesWhichShouldBeExposed;
 
     public ImplicationCellRenderer() {
     }
 
-    public ImplicationCellRenderer(int... indexesWhichShouldBeExposed) {
+    public ImplicationCellRenderer(int[] indexesWhichShouldBeExposed) {
         this.indexesWhichShouldBeExposed = indexesWhichShouldBeExposed;
     }
 
@@ -41,11 +43,32 @@ public class ImplicationCellRenderer implements ListCellRenderer<List<String>> {
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends List<String>> list,
-                                                  List<String> value, int index,
+    public Component getListCellRendererComponent(JList<? extends List<Long>> list,
+                                                  List<Long> value, int index,
                                                   boolean isSelected, boolean cellHasFocus) {
-        List<String> nextListInARow = list.getModel().getElementAt(index);
+        List<Long> nextListInARow = list.getModel().getElementAt(index);
+        int size = nextListInARow.size();
+        Utils.log("this row has " + size + " items");
+        JPanel panel = new JPanel(new FlowLayout());
 
-        return new JLabel(printedCollection(nextListInARow));
+        for (int i = 0; i < size; i++) {
+            Long item = nextListInARow.get(i);
+            String text = String.valueOf(item);
+            JLabel label = new JLabel();
+            if (shouldBeExposed(i)) {
+                label.setText("[" + text + "],");
+            } else {
+                label.setText(text + ",");
+            }
+            panel.add(label);
+        }
+        return panel;
+    }
+
+    private boolean shouldBeExposed(int i) {
+        for (int x : indexesWhichShouldBeExposed) {
+            if (x == i) return true;
+        }
+        return false;
     }
 }

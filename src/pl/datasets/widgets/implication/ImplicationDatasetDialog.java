@@ -5,7 +5,6 @@ import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
 import pl.datasets.widgets.event_search.ComputeButtonBehaviour;
-import pl.datasets.widgets.event_search.LogicalFormulaSolver;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,9 +29,14 @@ public class ImplicationDatasetDialog extends DatasetDialog implements ComputeBu
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
                 List<Event> events = getEventsFromModel();
 
-                List<List<Long>> result= wrapper.findChainedEventsOccurences(events,8);
+                List<List<Long>> result = wrapper.findChainedEventsOccurences(events, 8);
                 //TODO: Lukasz the lists list item is of type Long. Find in your code best place to convert it to string
-                new ImplicationSolverDialog(null);
+
+                int[] indexesThatShouldBeExposed = new int[events.size()];
+                for (int i = 0; i < events.size(); i++) {
+                    indexesThatShouldBeExposed[i] = events.get(i).getColumnIndex();
+                }
+                new ImplicationSolverDialog(result, indexesThatShouldBeExposed);
             }
         };
     }
