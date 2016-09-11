@@ -69,7 +69,7 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
         setupList();
     }
 
-    //todo: JOHANNES implement for n elements
+
     private void setupBeforeAfterButton() {
         beforeAfterButton.addActionListener(new ActionListener() {
             @Override
@@ -90,14 +90,6 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
 
     private void setupComputeButton() {
 
-
-        //todo: JOHANNES
-        /**
-         * put implementation above to class extending from this class:
-         * ({@link pl.datasets.widgets.event_search.EventBasedDatasetDialog})
-         *              OR
-         * ({@link pl.datasets.widgets.implication.ImplicationDatasetDialog})
-         **/
         computeButton.addActionListener(computeButtonClickListener());
     }
 

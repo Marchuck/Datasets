@@ -148,14 +148,19 @@ public class TrendingSubsetWrapper {
         List<List<Long>> implicationCandidates = new ArrayList<>();
 
         for (DatasetItem item : dataset) {
+
             for (Event singleEvent : chainedEvents) {
+
                 if (singleEvent.hasTrend(item)) {
                     if (chainedEvents.indexOf(singleEvent) == 0) {
                         implicationCandidates.add(initNewLongList(item));
                     } else {
+
                         for (List<Long> candidate : implicationCandidates) {
+
                             if (candidate.size() == chainedEvents.indexOf(singleEvent) && item.getTimestamp() - candidate.get(candidate.size() - 1) <= allowedOffset) {
                                 candidate.add(item.getTimestamp());
+                                break;
                             }
                         }
                     }
@@ -169,12 +174,14 @@ public class TrendingSubsetWrapper {
 
     private List<List<Long>> reduceCandidates(List<Event> chainedEvents, List<List<Long>> implicationCandidates) {
 
+        List<List<Long>> properImplications = new ArrayList<>();
+
         for (List<Long> candidate : implicationCandidates) {
-            if (candidate.size() != chainedEvents.size()) {
-                implicationCandidates.remove(candidate);
+            if (candidate.size() == chainedEvents.size()) {
+                properImplications.add(candidate);
             }
         }
-        return implicationCandidates;
+        return properImplications;
     }
 
     private List<Long> initNewLongList(DatasetItem item) {

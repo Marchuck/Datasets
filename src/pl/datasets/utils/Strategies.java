@@ -159,7 +159,7 @@ public class Strategies {
 
 
             if (candidate.size() == 1) {
-                return true;
+                return Double.compare(candidate.get(0).getValues().get(columnId), threshold) == 1;
             } else if (candidate.size() > 1) {
 
                 DatasetItem item;
@@ -191,7 +191,7 @@ public class Strategies {
         public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
 
             if (candidate.size() == 1) {
-                return true;
+                return Double.compare(candidate.get(0).getValues().get(columnId), threshold) == -1;
             } else if (candidate.size() > 1) {
 
                 for (int i = 0; i < candidate.size() - 1; i++) {
@@ -231,7 +231,7 @@ public class Strategies {
 
 
             if (candidate.size() == 1) {
-                return true;
+                return Double.compare(candidate.get(0).getValues().get(columnId), threshold) == 0;
             } else if (candidate.size() > 1) {
 
                 DatasetItem item;
