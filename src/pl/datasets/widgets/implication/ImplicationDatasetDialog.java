@@ -2,7 +2,10 @@ package pl.datasets.widgets.implication;
 
 import pl.datasets.DatasetDialog;
 import pl.datasets.model.DatasetItem;
+import pl.datasets.trend_match.TrendingSubsetWrapper;
+import pl.datasets.utils.Event;
 import pl.datasets.widgets.event_search.ComputeButtonBehaviour;
+import pl.datasets.widgets.event_search.LogicalFormulaSolver;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,17 +26,13 @@ public class ImplicationDatasetDialog extends DatasetDialog implements ComputeBu
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //todo: JOHANNES create logic for List
-                //this should be made
 
-                //List<?> out = yourLogicImpl.compute(this); or sth better
+                TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
+                List<Event> events = getEventsFromModel();
 
-                //compute here and pass result when you will be creating
-                // ImplicationDatasetDialog
-                //just invoke:
-                // new ImplicationSolverDialog(out);
-
-                //note: break private->protected to get access to data from super class
+                List<List<Long>> result= wrapper.findChainedEventsOccurences(events,8);
+                //TODO: Lukasz the lists list item is of type Long. Find in your code best place to convert it to string
+                new ImplicationSolverDialog(null);
             }
         };
     }

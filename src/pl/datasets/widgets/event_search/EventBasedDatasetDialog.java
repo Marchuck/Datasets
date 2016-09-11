@@ -32,7 +32,6 @@ public class EventBasedDatasetDialog extends DatasetDialog implements ComputeBut
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //todo: JOHANNESS : logic for chained calculations should be made here
                 //todo: Lukasz create view  for displaying results
 
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
