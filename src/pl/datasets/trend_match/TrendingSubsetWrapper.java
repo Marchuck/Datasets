@@ -158,7 +158,10 @@ public class TrendingSubsetWrapper {
 
                         for (List<Long> candidate : implicationCandidates) {
 
-                            if (candidate.size() == chainedEvents.indexOf(singleEvent) && item.getTimestamp() - candidate.get(candidate.size() - 1) <= allowedOffset) {
+                            if (candidate.size() == chainedEvents.indexOf(singleEvent)
+                                    && item.getTimestamp() - candidate.get(candidate.size() - 1) <= allowedOffset
+                                    && item.getTimestamp() - candidate.get(candidate.size() - 1) > 0) {
+                                Utils.log("Putting item into candidate list" + item.toString() + singleEvent.toString() + candidate.toString());
                                 candidate.add(item.getTimestamp());
                                 break;
                             }
