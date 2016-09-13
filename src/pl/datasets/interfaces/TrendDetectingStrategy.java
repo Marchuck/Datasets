@@ -9,6 +9,7 @@ import java.util.List;
  * Created by JOHANNES on 6/25/2016.
  */
 public abstract class TrendDetectingStrategy {
+    public static int ACCURACY = 3; //for example 3.141 has accuracy 3
     private String name;
 
     public TrendDetectingStrategy(String name) {

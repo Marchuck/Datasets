@@ -33,6 +33,11 @@ public class Event implements Serializable {
         return properties[columnIndex] + " " + strategy + " " + strategy.getOptionalThreshold();
     }
 
+    public String eventName(String property) {
+
+        return property + " " + strategy + " " + strategy.getOptionalThreshold();
+    }
+
     public TrendDetectingStrategy getStrategy() {
         return strategy;
     }

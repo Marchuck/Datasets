@@ -151,12 +151,11 @@ public class Strategies {
 
         @Override
         public String getOptionalThreshold() {
-            return String.valueOf(threshold);
+            return String.format("%." + ACCURACY + "f", threshold);
         }
 
         @Override
         public boolean hasTrend(List<DatasetItem> candidate, Integer columnId) {
-
 
             if (candidate.size() == 1) {
                 return Double.compare(candidate.get(0).getValues().get(columnId), threshold) == 1;
@@ -208,7 +207,7 @@ public class Strategies {
 
         @Override
         public String getOptionalThreshold() {
-            return String.valueOf(threshold);
+            return String.format("%." + ACCURACY + "f", threshold);
         }
     }
 
@@ -223,7 +222,7 @@ public class Strategies {
 
         @Override
         public String getOptionalThreshold() {
-            return String.valueOf(threshold);
+            return String.format("%." + ACCURACY + "f", threshold);
         }
 
         @Override

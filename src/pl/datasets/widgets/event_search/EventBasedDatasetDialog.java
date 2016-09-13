@@ -32,7 +32,7 @@ public class EventBasedDatasetDialog extends DatasetDialog implements ComputeBut
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //todo: Lukasz create view  for displaying results
+
 
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
                 wrapper.setMinTrendLength(2);
@@ -55,36 +55,11 @@ public class EventBasedDatasetDialog extends DatasetDialog implements ComputeBut
                 for (Event ev : events) {
                     bols.add(wrapper.evaluate(ev));
                     List<List<Long>> trends = wrapper.getTrends(ev, false);
-                    for (List<Long> l : trends)
-//                        Utils.log(Arrays.toString(CSVReader.genericlistToArray(l, new CSVReader.Bie<Long>() {
-//                            @Override
-//                            public Long[] create(int capacity) {
-//                                return new Long[capacity];
-//                            }
-//                        })));
-                        resultsOfAllSingleWrapperOutput.add(trends);
+                    resultsOfAllSingleWrapperOutput.add(trends);
                 }
-                for (int j = 0; j < resultsOfAllSingleWrapperOutput.size(); j++) {
-
-                }
-//                List<List<Long>> results1 = wrapper.getTrends(, false);
-//                res.add(results);
-//                new ResultsEntity().bind(results);
-
-
-//                new ResultsEntity().bindAll(resultsOfAllSingleWrapperOutput);
-                new ResultsEntity().bindSeparated(sliced);
+                List<String> properties = datasetItems.get(0).getProperties();
+                new ResultsEntity().withProperties(properties).bindSeparated(sliced);
             }
-
-
-
-                //List<?> out = yourLogicImpl.compute(this); or sth better
-
-                //compute here and pass result when you will be creating
-                // ImplicationDatasetDialog
-                //just invoke:
-                //note: break private->protected to get access to data from super class
-
         };
     }
 }

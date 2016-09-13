@@ -7,6 +7,8 @@ import pl.datasets.utils.Utils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -19,6 +21,8 @@ import java.util.Random;
  * 15 : 55
  */
 public class ResultsEntity {
+
+    private List<String> properties;
 
 
     public static void main(String[] args) {
@@ -65,9 +69,9 @@ public class ResultsEntity {
     }
 
     private static String labelForData(List<Boolean> data) {
-        if (allTrue(data)) return "Invariance";
-        else if (allFalse(data)) return "Absence";
-        return "Undefined";
+        if (allTrue(data)) return "(Invariance)";
+        else if (allFalse(data)) return "(Absence)";
+        return "";
     }
 
     private static boolean allFalse(List<Boolean> data) {
@@ -158,27 +162,73 @@ public class ResultsEntity {
         window.setVisible(true);
     }
 
+    public ResultsEntity withProperties(List<String> properties) {
+        this.properties = properties;
+        return this;
+    }
+
+
     public void bindSeparated(List<Pair<Event, List<Boolean>>> sliced) {
         String title = "";
-        JDialog window = new JDialog();
-        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        window.setTitle(title);
+        JDialog dialog = new JDialog();
+        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dialog.setTitle(title);
         //window.setLayout(new FlowLayout());
         //   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setBounds(30, 30, 300, 400);
-        window.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING));
+        dialog.setBounds(30, 30, 300, 400);
+        dialog.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING));
         // window.getContentPane().add(new ResultCanvas(new Point(20, 20), data));
         // window.getContentPane().add(new JLabel("ASCENDING"));
 //        window.add(new JLabel(labelForData(_data.get(0))));
+        String longest = "";
         for (Pair<Event, List<Boolean>> pair : sliced) {
-            window.getContentPane().add(new JLabel(pair.getKey().toString()));
-            window.getContentPane().add(new ResultCanvas(new Point(20, 20), pair.getValue()));
+            Event nextEvent = pair.getKey();
+            int propertyIndex = nextEvent.getColumnIndex();
+            String propertyName = properties.get(propertyIndex);
+            String labelForStrip = nextEvent.eventName(propertyName);
+            String out = labelForStrip + optionalJudgement(pair.getValue());
+            longest = longest.length() < out.length() ? out : longest;
+        }
+        for (Pair<Event, List<Boolean>> pair : sliced) {
+
+            Event nextEvent = pair.getKey();
+            int propertyIndex = nextEvent.getColumnIndex();
+            String propertyName = properties.get(propertyIndex);
+            String labelForStrip = nextEvent.eventName(propertyName);
+
+
+            dialog.getContentPane().add(new JLabel(fixed(longest.length(), labelForStrip + optionalJudgement(pair.getValue()))));
+            dialog.getContentPane().add(new ResultCanvas(new Point(20, 20), pair.getValue()));
         }
         //     new ArrayList<Event>(){{add(columnStrategyPair);}}
 
-        window.pack();
-        window.setLocationByPlatform(true);
-        window.setVisible(true);
+        dialog.pack();
+        dialog.setLocationByPlatform(true);
+        dialog.setVisible(true);
+        dialog.setSize(760, 512);
+        dialog.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+                System.out.println("componentResized: " + e.paramString());
+            }
+        });
+
     }
+
+    private String fixed(int length, String s) {
+        if (length == s.length()) return s;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length - s.length(); i++) {
+            sb.append("_");
+        }
+        return sb.toString() + s;
+    }
+
+    private String optionalJudgement(List<Boolean> data) {
+        return labelForData(data);
+    }
+
+
 }
 
