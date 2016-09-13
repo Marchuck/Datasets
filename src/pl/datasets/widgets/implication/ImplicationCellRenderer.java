@@ -1,7 +1,5 @@
 package pl.datasets.widgets.implication;
 
-import pl.datasets.utils.Utils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collection;
@@ -48,17 +46,18 @@ public class ImplicationCellRenderer implements ListCellRenderer<List<Long>> {
                                                   boolean isSelected, boolean cellHasFocus) {
         List<Long> nextListInARow = list.getModel().getElementAt(index);
         int size = nextListInARow.size();
-        Utils.log("this row has " + size + " items");
+        //Utils.log("this row has " + size + " items");
         JPanel panel = new JPanel(new FlowLayout());
 
         for (int i = 0; i < size; i++) {
             Long item = nextListInARow.get(i);
             String text = String.valueOf(item);
             JLabel label = new JLabel();
+            boolean isLast = i == size - 1;
             if (shouldBeExposed(i)) {
-                label.setText("[" + text + "],");
+                label.setText("[" + text + "]" + (isLast ? "" : ","));
             } else {
-                label.setText(text + ",");
+                label.setText(text + (isLast ? "" : ","));
             }
             panel.add(label);
         }
