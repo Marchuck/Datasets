@@ -15,6 +15,12 @@ public class ImplicationSolverDialog extends JFrame {
 
     private DefaultListModel<List<Long>> resultedDatasetModel = new DefaultListModel<>();
 
+
+    public ImplicationSolverDialog(List<List<Long>> outputDataset, List<?> anotherThing, int[] indexes) {
+        //todo: JOHANNES put here as many parameters as you to express full raport per item
+
+    }
+
     public ImplicationSolverDialog(List<List<Long>> outputDataset, int[] indexes) {
         super();
         setContentPane(rootPanel);
@@ -40,6 +46,35 @@ public class ImplicationSolverDialog extends JFrame {
         setLocation(300, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    /**
+     * put extra parameters here to display rich-information report
+     */
+    public static class Builder {
+        private List<List<Long>> longList;
+        private List<?> iDontKnowList;
+        private int[] indexes;
+        //todo: JOHANNES DO NOT HESTITATE EDITING THESE PARAMS
+
+        public Builder withIndexes(int[] indexes) {
+            this.indexes = indexes;
+            return this;
+        }
+
+        public Builder withLongList(List<List<Long>> longList) {
+            this.longList = longList;
+            return this;
+        }
+
+        public Builder withIDontKnowList(List<?> iDontKnowList) {
+            this.iDontKnowList = iDontKnowList;
+            return this;
+        }
+
+        public ImplicationSolverDialog build() {
+            return new ImplicationSolverDialog(longList, iDontKnowList, indexes);
+        }
     }
 
 }

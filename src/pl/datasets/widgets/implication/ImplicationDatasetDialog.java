@@ -30,7 +30,6 @@ public class ImplicationDatasetDialog extends DatasetDialog implements ComputeBu
                 List<Event> events = getEventsFromModel();
 
                 List<List<Long>> result = wrapper.findChainedEventsOccurences(events, 8);
-                //TODO: Lukasz the lists list item is of type Long. Find in your code best place to convert it to string
 
                 int[] indexesThatShouldBeExposed = new int[events.size()];
                 for (int i = 0; i < events.size(); i++) {
