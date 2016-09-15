@@ -18,7 +18,7 @@ public class ImplicationSolverDialog extends JFrame {
 
     public ImplicationSolverDialog(List<List<Long>> outputDataset, List<?> anotherThing, int[] indexes) {
         //todo: JOHANNES put here as many parameters as you to express full raport per item
-
+        this(outputDataset, indexes);
     }
 
     public ImplicationSolverDialog(List<List<Long>> outputDataset, int[] indexes) {
