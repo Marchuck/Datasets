@@ -7,7 +7,10 @@ import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
-import pl.datasets.widgets.*;
+import pl.datasets.widgets.EventRenderer;
+import pl.datasets.widgets.ItemCallback;
+import pl.datasets.widgets.SelectOperationDialog;
+import pl.datasets.widgets.TwoEventsDialog;
 import pl.datasets.widgets.event_search.ComputeButtonBehaviour;
 
 import javax.swing.*;
@@ -25,13 +28,12 @@ import java.util.List;
  */
 public abstract class DatasetDialog extends JFrame implements ComputeButtonBehaviour {
 
-    //    private List<Event> events = new ArrayList<>();
+    protected List<DatasetItem> datasetItems;
     private JPanel panel1;
     private JButton addButton;
     private JButton computeButton;
     private JList<Event> operationsList;
     private JButton beforeAfterButton;
-    protected List<DatasetItem> datasetItems;
     private SelectOperationDialog selectOperationDialog;
     private String[] properties;
     private DefaultListModel<Event> model = new DefaultListModel<>();

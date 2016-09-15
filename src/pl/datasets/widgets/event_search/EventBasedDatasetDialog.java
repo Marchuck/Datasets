@@ -5,7 +5,6 @@ import pl.datasets.DatasetDialog;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
-import pl.datasets.widgets.ResultsEntity;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,7 +57,9 @@ public class EventBasedDatasetDialog extends DatasetDialog implements ComputeBut
                     resultsOfAllSingleWrapperOutput.add(trends);
                 }
                 List<String> properties = datasetItems.get(0).getProperties();
-                new ResultsEntity().withProperties(properties).bindSeparated(sliced);
+//                new Sth(properties,sliced);
+                new EventSearchSummaryDialog(properties, sliced);
+//                new ResultsEntity().withProperties(properties).bindSeparated(sliced);
             }
         };
     }
