@@ -12,6 +12,9 @@ import java.util.List;
 public class ImplicationEventResult {
 
     private List<EventResult> listOfSingleEventResults;
+
+
+
     private List<List<Long>> listOfFullImplication;
 
     public List<EventResult> getListOfSingleEventResults() {
