@@ -143,6 +143,8 @@ public class TrendingSubsetWrapper {
         return causationList;
     }
 
+
+
     public List<List<Long>> findChainedEventsOccurences(List<Event> chainedEvents, int allowedOffset) {
 
         List<List<Long>> implicationCandidates = new ArrayList<>();
