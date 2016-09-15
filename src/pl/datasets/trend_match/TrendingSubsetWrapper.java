@@ -64,7 +64,7 @@ public class TrendingSubsetWrapper {
         return getTrends(new ArrayList<Event>() {{
             add(columnStrategyPair);
         }}, getAbsenceOfTrend);
-//        return getTrends(Collections.singletonList(columnStrategyPair), getAbsenceOfTrend);
+
     }
 
     public List<Boolean> evaluate(final Event columnStrategyPair) {
