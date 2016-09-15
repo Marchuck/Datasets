@@ -20,19 +20,22 @@ import java.util.List;
  */
 public class EventSearchSummaryDialog extends JFrame {
 
-    private JLabel titlehidden;
-    private JPanel rootPanel;
-    private JScrollPane scrollPane;
-    private JList<ThreeElements> statisticsList;
-    private JLabel theTitle;
-    private JList<String> yellowBoxesList;
-    private JTextArea detailedTextArea;
+    protected JLabel titlehidden;
+    protected JPanel rootPanel;
+    protected JScrollPane scrollPane;
+    protected JList<ThreeElements> statisticsList;
+    protected JLabel theTitle;
+    protected JList<String> yellowBoxesList;
+    protected JTextArea detailedTextArea;
 
     //models!
-    private DefaultListModel<ThreeElements> statisticsModel = new DefaultListModel<>();
-    private DefaultListModel<String> yellowBoxesModel = new DefaultListModel<>();
+    protected DefaultListModel<ThreeElements> statisticsModel = new DefaultListModel<>();
+    protected DefaultListModel<String> yellowBoxesModel = new DefaultListModel<>();
+    protected EventSearchSummaryModel model;
 
-    private EventSearchSummaryModel model;
+    public EventSearchSummaryDialog() {
+        super("Summary");
+    }
 
     public EventSearchSummaryDialog(List<String> properties, List<Pair<Event, List<Boolean>>> sliced,
                                     List<List<List<Long>>> resultsOfAllSingleWrapperOutput) {
@@ -53,6 +56,21 @@ public class EventSearchSummaryDialog extends JFrame {
 
     }
 
+    public static Component createComponent(ThreeElements nextListInARow) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        JLabel a = new JLabel(nextListInARow.a, SwingConstants.LEFT);
+        JLabel b = new JLabel(nextListInARow.b, SwingConstants.LEFT);
+        JLabel c = new JLabel(nextListInARow.c, SwingConstants.RIGHT);
+
+        b.setForeground(Color.gray);
+
+        panel.add(a);
+        panel.add(b);
+        panel.add(c);
+
+        return panel;
+    }
 
     Observable<DefaultListModel<String>> getModelForStrips() {
         return Observable.from(model.sliced).map(new Func1<Pair<Event, List<Boolean>>, String>() {
@@ -161,22 +179,6 @@ public class EventSearchSummaryDialog extends JFrame {
     private void setGeneralizedStatisticsText(String s) {
         detailedTextArea.append(s);
 //        additionalText.setText(s);
-    }
-
-    private Component createComponent(ThreeElements nextListInARow) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        JLabel a = new JLabel(nextListInARow.a, SwingConstants.LEFT);
-        JLabel b = new JLabel(nextListInARow.b, SwingConstants.LEFT);
-        JLabel c = new JLabel(nextListInARow.c, SwingConstants.RIGHT);
-
-        b.setForeground(Color.gray);
-
-        panel.add(a);
-        panel.add(b);
-        panel.add(c);
-
-        return panel;
     }
 
     private Action1<Throwable> error() {

@@ -5,6 +5,7 @@ import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
 import pl.datasets.widgets.event_search.ComputeButtonBehaviour;
+import pl.datasets.widgets.implication.gui.ImplicationSummaryDialog;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,7 +51,8 @@ public class ImplicationDatasetDialog extends DatasetDialog implements ComputeBu
                 for (int i = 0; i < events1.size(); i++) {
                     indexesThatShouldBeExposed[i] = events1.get(i).getColumnIndex();
                 }
-                new ImplicationSolverDialog(result1, indexesThatShouldBeExposed);
+//                new ImplicationSolverDialog(result1, indexesThatShouldBeExposed);
+                new ImplicationSummaryDialog(result1, indexesThatShouldBeExposed);
             }
         };
     }

@@ -109,4 +109,5 @@ public class EventSearchSummaryModel {
     public String optionalJudgement(List<Boolean> data) {
         return labelForData(data);
     }
+
 }
