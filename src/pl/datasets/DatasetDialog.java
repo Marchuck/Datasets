@@ -12,6 +12,7 @@ import pl.datasets.widgets.ItemCallback;
 import pl.datasets.widgets.SelectOperationDialog;
 import pl.datasets.widgets.TwoEventsDialog;
 import pl.datasets.widgets.event_search.ComputeButtonBehaviour;
+import pl.datasets.widgets.implication.DatasetProvider;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +29,8 @@ import java.util.List;
  */
 public abstract class DatasetDialog extends JFrame implements ComputeButtonBehaviour {
 
-    protected List<DatasetItem> datasetItems;
+
+    public List<DatasetItem> datasetItems;
     private JPanel panel1;
     private JButton addButton;
     private JButton computeButton;
@@ -43,6 +45,8 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
         setContentPane(panel1);
         this.datasetItems = datasetItems;
         this.properties = getAttributeNames(propertyNames);
+        DatasetProvider.setDataset(datasetItems);
+        DatasetProvider.setProperties(properties);
         selectOperationDialog = new SelectOperationDialog(properties, operations);
         init();
         setMinimumSize(new Dimension(300, 200));

@@ -56,6 +56,21 @@ public class EventSearchSummaryDialog extends JFrame {
 
     }
 
+    public static Component createComponent(ThreeElements nextListInARow, Color color) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.setBackground(color);
+        JLabel a = new JLabel(nextListInARow.a, SwingConstants.LEFT);
+        JLabel b = new JLabel(nextListInARow.b, SwingConstants.LEFT);
+        JLabel c = new JLabel(nextListInARow.c, SwingConstants.RIGHT);
+
+        b.setForeground(Color.gray);
+
+        panel.add(a);
+        panel.add(b);
+        panel.add(c);
+
+        return panel;
+    }
     public static Component createComponent(ThreeElements nextListInARow) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 

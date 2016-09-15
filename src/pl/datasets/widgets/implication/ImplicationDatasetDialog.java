@@ -52,7 +52,7 @@ public class ImplicationDatasetDialog extends DatasetDialog implements ComputeBu
                     indexesThatShouldBeExposed[i] = events1.get(i).getColumnIndex();
                 }
 //                new ImplicationSolverDialog(result1, indexesThatShouldBeExposed);
-                new ImplicationSummaryDialog(result1, indexesThatShouldBeExposed);
+                new ImplicationSummaryDialog(result1, indexesThatShouldBeExposed, events1);
             }
         };
     }

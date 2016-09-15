@@ -14,7 +14,9 @@ import java.util.List;
  */
 public class ResultCanvas extends JComponent {
 
-    private static Color[] color;
+    static final int widthMult = 2;
+    static final int heightMult = 3;
+    public static Color[] color;
 
     static {
         color = new Color[7];
@@ -50,12 +52,14 @@ public class ResultCanvas extends JComponent {
         this(position, data, Color.YELLOW);
     }
 
+
     public ResultCanvas(Point position, List<Integer> manyData, int width) {
         super();
         manyModeEnabled = true;
         this.position = position;
         this.manyData = manyData;
-        this.setPreferredSize(new Dimension(width, 40));
+
+        this.setPreferredSize(new Dimension(widthMult * width, 40));
     }
 
     public int getCellWidth() {
@@ -118,19 +122,22 @@ public class ResultCanvas extends JComponent {
     }
 
     private void drawManyData(Graphics g, List<Integer> data) {
+
         for (int j = 0; j < data.size(); j++) {
             int colorIndex = data.get(j);
 
+
             if (colorIndex != 0) {
-                g.setColor(color[colorIndex]);
-                g.fillRect(position.x + cellWidth * j, position.y, cellWidth, cellHeight);
+                g.setColor(color[colorIndex % color.length]);
+                g.fillRect(position.x + widthMult * cellWidth * j, position.y, widthMult * cellWidth, heightMult * cellHeight);
             } else {
                 g.setColor(nonExistanceColor);
-                g.fillRect(position.x + cellWidth * j, position.y, cellWidth, cellHeight);
+                g.fillRect(position.x + widthMult * cellWidth * j, position.y, widthMult * cellWidth, heightMult * cellHeight);
             }
 
             g.setColor(Color.BLACK);
-            g.drawLine(position.x + cellWidth * j, position.y + 1, position.x + cellWidth * j, position.y + cellHeight - 1);
+            g.drawLine(position.x + widthMult * cellWidth * j, position.y + 1, position.x + widthMult * cellWidth * j,
+                    position.y + heightMult * cellHeight - 1);
         }
     }
 

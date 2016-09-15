@@ -1,9 +1,11 @@
 package pl.datasets.widgets.implication.gui;
 
+import pl.datasets.utils.Event;
 import pl.datasets.utils.ThreeElements;
 import pl.datasets.utils.Utils;
 import pl.datasets.widgets.ResultCanvas;
 import pl.datasets.widgets.event_search.EventSearchSummaryDialog;
+import pl.datasets.widgets.implication.DatasetProvider;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -12,6 +14,7 @@ import rx.schedulers.Schedulers;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,17 +23,16 @@ import java.util.List;
  */
 public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
 
-
-    // private EventSearchSummaryModel model;
-
+    private List<Event> events;
     private List<List<Long>> implicationData;
 
-    public ImplicationSummaryDialog(List<List<Long>> implicationData, int[] indexesThatShouldBeExposed) {
+    public ImplicationSummaryDialog(List<List<Long>> implicationData, int[] indexesThatShouldBeExposed, List<Event> events1) {
         super();
         Utils.log("ImplicationSummaryDialog");
         setContentPane(rootPanel);
         //setPreferredSize(new Dimension(300, 200));
         this.implicationData = implicationData;
+        this.events = events1;
         fillWithdata();
         setMinimumSize(new Dimension(300, 200));
         setLocation(300, 300);
@@ -63,12 +65,13 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
     }
 
     Observable<DefaultListModel<ThreeElements>> getModelForStatistics() {
-        return Observable.from(implicationData)
-                .map(new Func1<List<Long>, ThreeElements>() {
+        return Observable.from(events)
+                .map(new Func1<Event, ThreeElements>() {
                     @Override
-                    public ThreeElements call(List<Long> longs) {
+                    public ThreeElements call(Event event) {
                         //todo: list long display as three values
-                        String property1 = "";
+//                        String property1 = asLongsArray(longs);
+                        String property1 = event.eventNameFor(DatasetProvider.instance.properties);
                         String property2 = "";
                         String property3 = "";
                         return new ThreeElements(property1, property2, property3);
@@ -76,11 +79,19 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
                 }).toList().map(new Func1<List<ThreeElements>, DefaultListModel<ThreeElements>>() {
                     @Override
                     public DefaultListModel<ThreeElements> call(List<ThreeElements> threeElementses) {
-                        DefaultListModel<ThreeElements> elementsDefaultListModel = new DefaultListModel<ThreeElements>();
+                        DefaultListModel<ThreeElements> elementsDefaultListModel = new DefaultListModel<>();
                         for (ThreeElements e : threeElementses) elementsDefaultListModel.addElement(e);
                         return elementsDefaultListModel;
                     }
                 });
+    }
+
+    private String asLongsArray(List<Long> longs) {
+        long[] arr = new long[longs.size()];
+        for (int i = 0; i < longs.size(); i++) {
+            arr[i] = longs.get(i);
+        }
+        return Arrays.toString(arr);
     }
 
     private void fillWithdata() {
@@ -97,7 +108,7 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
 
                                 ThreeElements nextListInARow = list.getModel().getElementAt(index);
 
-                                return createComponent(nextListInARow);
+                                return createComponent(nextListInARow, ResultCanvas.color[1 + index % ResultCanvas.color.length]);
                             }
                         });
                     }
@@ -107,6 +118,24 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
             @Override
             public void call(DefaultListModel<String> stringDefaultListModel) {
                 yellowBoxesList.setModel(stringDefaultListModel);
+
+                final List<Integer> longList = new ArrayList<>();
+                int len = DatasetProvider.instance.items.size();
+                for (int i = 0; i < len; i++) {
+                    longList.add(0);
+                }
+                for (int j = 0; j < yellowBoxesList.getModel().getSize(); j++) {
+                    List<Long> nextIntegers = implicationData.get(j);
+                    int k = 1;
+                    for (int i = 0; i < nextIntegers.size(); i++) {
+                        int value = nextIntegers.get(i).intValue();
+                        longList.set(value, k);
+                        ++k;
+                    }
+                }
+                DefaultListModel<String> singleModel = new DefaultListModel<>();
+                singleModel.addElement("Result");
+                yellowBoxesList.setModel(singleModel);
                 yellowBoxesList.setCellRenderer(new ListCellRenderer<String>() {
                     @Override
                     public Component getListCellRendererComponent(JList<? extends String> list, String value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -118,9 +147,9 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
                         }
                         System.out.println();
 
-                        List<Integer> stripData = getLongs(implicationData.get(index));
+                        // List<Integer> stripData = getLongs(implicationData.get(index));
 
-                        c.add(buildSingleStrip(stripData));
+                        c.add(buildSingleStrip(longList));
                         return c;
                     }
                 });
@@ -208,7 +237,7 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
     private ResultCanvas buildSingleStrip(List<Integer> data) {
         ResultCanvas resultCanvas = new ResultCanvas.Builder()
                 .setManyData(data)
-                .setPreferredWidth(400)
+                .setPreferredWidth(DatasetProvider.instance.items.size())
                 .setPosition(new Point(20, 20))
                 .build();
         return resultCanvas;
