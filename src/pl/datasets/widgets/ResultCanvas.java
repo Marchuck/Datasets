@@ -1,7 +1,5 @@
 package pl.datasets.widgets;
 
-import pl.datasets.model.BeforeAfterPair;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -24,17 +22,18 @@ public class ResultCanvas extends JComponent {
     private Color existanceColor = Color.YELLOW;
     private Color nonExistanceColor = Color.LIGHT_GRAY;
     private Color separatorColor = Color.BLACK;
-    private boolean manyColorsEnabled;
 
-    public ResultCanvas(Point position, java.util.List<Boolean> data) {
+    public ResultCanvas(Point position, java.util.List<Boolean> data, Color color) {
+        super();
+        this.existanceColor = color;
 //        this.setMinimumSize(new Dimension(300, 40));
         this.setPreferredSize(new Dimension(300, 40));
         this.data = data;
         this.position = position;
     }
 
-    public ResultCanvas(Point position, List<BeforeAfterPair> beforeAfterPairs, boolean b) {
-        this.manyColorsEnabled = b;
+    public ResultCanvas(Point position, java.util.List<Boolean> data) {
+        this(position, data, Color.YELLOW);
     }
 
     public int getCellWidth() {
@@ -74,13 +73,10 @@ public class ResultCanvas extends JComponent {
         return this;
     }
 
-    public ResultCanvas withManyColorsEnabled() {
-        this.manyColorsEnabled = true;
-        return this;
-    }
-
     public ResultCanvas withExistanceColor(Color existanceColor) {
         setExistanceColor(existanceColor);
+        repaint();
+        invalidate();
         return this;
     }
 
@@ -95,7 +91,7 @@ public class ResultCanvas extends JComponent {
         for (int j = 0; j < data.size(); j++) {
             boolean drawthisElement = data.get(j);
             if (drawthisElement) {
-                g.setColor(manyColorsEnabled ? nextColor(index) : existanceColor);
+                g.setColor(existanceColor);
                 g.fillRect(position.x + cellWidth * j, position.y, cellWidth, cellHeight);
             } else {
                 g.setColor(nonExistanceColor);
@@ -109,6 +105,32 @@ public class ResultCanvas extends JComponent {
 
     private Color nextColor(int index) {
         return null;
+    }
+
+    public static class Builder {
+        Point position;
+        List<Boolean> data;
+        Color color = Color.YELLOW;
+
+        public Builder setPosition(Point position) {
+            this.position = position;
+            return this;
+        }
+
+        public Builder setData(List<Boolean> data) {
+            this.data = data;
+            return this;
+        }
+
+        public Builder setColor(Color color) {
+            this.color = color;
+            return this;
+        }
+
+        public ResultCanvas build() {
+            if (data == null) throw new NullPointerException("CANNOT CREATE WITHOUT DATA");
+            return new ResultCanvas(position, data, color);
+        }
     }
 }
 

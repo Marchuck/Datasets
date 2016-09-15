@@ -28,12 +28,12 @@ public class Event implements Serializable {
     }
 
 
-    public String eventName(String[] properties) {
+    public String eventNameFor(String[] properties) {
 
         return properties[columnIndex] + " " + strategy + " " + strategy.getOptionalThreshold();
     }
 
-    public String eventName(String property) {
+    public String eventNameFor(String property) {
 
         return property + " " + strategy + " " + strategy.getOptionalThreshold();
     }

@@ -1,7 +1,6 @@
 package pl.datasets.widgets;
 
 import javafx.util.Pair;
-import pl.datasets.model.BeforeAfterPair;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.Utils;
 
@@ -120,6 +119,7 @@ public class ResultsEntity {
         display(data, "Results");
     }
 
+    @Deprecated
     public void bindAll(List<List<List<Long>>> res) {
         List<List<Boolean>> bls = new ArrayList<>();
         List<List<Boolean>> bless = new ArrayList<>();
@@ -142,26 +142,6 @@ public class ResultsEntity {
         return b;
     }
 
-    public void bindAllAfter(List<BeforeAfterPair> beforeAfterPairs) {
-        String title = "";
-        JDialog window = new JDialog();
-        window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        window.setTitle(title);
-        //window.setLayout(new FlowLayout());
-        //   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setBounds(30, 30, 300, 400);
-        window.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING));
-        // window.getContentPane().add(new ResultCanvas(new Point(20, 20), data));
-        // window.getContentPane().add(new JLabel("ASCENDING"));
-//        window.add(new JLabel(labelForData(_data.get(0))));
-        window.add(new ResultCanvas(new Point(20, 20), beforeAfterPairs, true).withExistanceColor(Color.MAGENTA));
-        //     new ArrayList<Event>(){{add(columnStrategyPair);}}
-
-        window.pack();
-        window.setLocationByPlatform(true);
-        window.setVisible(true);
-    }
-
     public ResultsEntity withProperties(List<String> properties) {
         this.properties = properties;
         return this;
@@ -175,33 +155,41 @@ public class ResultsEntity {
         dialog.setTitle(title);
         //window.setLayout(new FlowLayout());
         //   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        dialog.setBounds(30, 30, 300, 400);
-        dialog.getContentPane().setLayout(new FlowLayout(FlowLayout.LEADING));
-        // window.getContentPane().add(new ResultCanvas(new Point(20, 20), data));
-        // window.getContentPane().add(new JLabel("ASCENDING"));
-//        window.add(new JLabel(labelForData(_data.get(0))));
-        String longest = "";
+        //dialog.setBounds(30, 30, 300, 400);
+        JPanel rootPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        dialog.setContentPane(rootPanel);
+        rootPanel.add(new Label("SUMMARY", Label.CENTER));
+
+        String longest = findLongestDescription(sliced);
         for (Pair<Event, List<Boolean>> pair : sliced) {
+            List<Boolean> timestampsWhichAgreesWithEvent = pair.getValue();
             Event nextEvent = pair.getKey();
-            int propertyIndex = nextEvent.getColumnIndex();
-            String propertyName = properties.get(propertyIndex);
-            String labelForStrip = nextEvent.eventName(propertyName);
-            String out = labelForStrip + optionalJudgement(pair.getValue());
-            longest = longest.length() < out.length() ? out : longest;
+
+            float[] existanceAndNonExistanceOfEvent = getPercentageStatistics(timestampsWhichAgreesWithEvent);
+            int[] longestEventLengthAndOccurence = getLongestEventLengthAndOccurence(timestampsWhichAgreesWithEvent);
+
+            int propertyId = nextEvent.getColumnIndex();
+            String propertyName = properties.get(propertyId);
+            String labelForStrip = nextEvent.eventNameFor(propertyName);
+
+            String labelDescription = labelForStrip + optionalJudgement(timestampsWhichAgreesWithEvent);
+            String statistics = String.format(" %.2f %%, %.2f %% %d, %d ",
+                    existanceAndNonExistanceOfEvent[0], existanceAndNonExistanceOfEvent[1], longestEventLengthAndOccurence[0],
+                    longestEventLengthAndOccurence[1]);
+            labelDescription += statistics;
+            int offset = longest.length();
+
+            String descriptionPerLabel = withFixedOffset(offset, labelDescription);
+            dialog.getContentPane().add(new JLabel(descriptionPerLabel));
+
+            ResultCanvas resultCanvas = new ResultCanvas.Builder()
+                    .setColor(Color.YELLOW)
+                    .setData(pair.getValue())
+                    .setPosition(new Point(20, 20))
+                    .build();
+
+            dialog.getContentPane().add(resultCanvas);
         }
-        for (Pair<Event, List<Boolean>> pair : sliced) {
-
-            Event nextEvent = pair.getKey();
-            int propertyIndex = nextEvent.getColumnIndex();
-            String propertyName = properties.get(propertyIndex);
-            String labelForStrip = nextEvent.eventName(propertyName);
-
-
-            dialog.getContentPane().add(new JLabel(fixed(longest.length(), labelForStrip + optionalJudgement(pair.getValue()))));
-            dialog.getContentPane().add(new ResultCanvas(new Point(20, 20), pair.getValue()));
-        }
-        //     new ArrayList<Event>(){{add(columnStrategyPair);}}
-
         dialog.pack();
         dialog.setLocationByPlatform(true);
         dialog.setVisible(true);
@@ -216,7 +204,65 @@ public class ResultsEntity {
 
     }
 
-    private String fixed(int length, String s) {
+    private int[] getLongestEventLengthAndOccurence(List<Boolean> timestampsWhichAgreesWithEvent) {
+        int longest = 0, tmpLength = 0, indexOfOccurence = 0;
+        for (int j = 0; j < timestampsWhichAgreesWithEvent.size(); j++) {
+            boolean b = timestampsWhichAgreesWithEvent.get(j);
+            if (b) {
+                ++tmpLength;
+            } else {
+                if (tmpLength > longest) {
+                    longest = tmpLength;
+                    indexOfOccurence = j - longest;
+                }
+                tmpLength = 0;
+            }
+        }
+        if (tmpLength == timestampsWhichAgreesWithEvent.size()) {
+            return new int[]{tmpLength, 0};
+        } else return new int[]{
+                longest, indexOfOccurence
+        };
+    }
+
+    private float[] getPercentageStatistics(List<Boolean> timestampsWhichAgreesWithEvent) {
+        int size = timestampsWhichAgreesWithEvent.size();
+        int eventExistanceSize = calculateTimestampOccurrences(timestampsWhichAgreesWithEvent);
+        int eventNonExistanceSize = size - eventExistanceSize;
+
+        float percentOfExistance = (float) 100 * eventExistanceSize / size;
+        float percentOfNonExistance = (float) 100 * eventNonExistanceSize / size;
+
+        return new float[]{percentOfExistance, percentOfNonExistance};
+    }
+
+    private int calculateTimestampOccurrences(List<Boolean> timestampsWhichAgreesWithEvent) {
+        return calculateTrues(timestampsWhichAgreesWithEvent);
+    }
+
+    private int calculateTrues(List<Boolean> list) {
+        int size = 0;
+        for (boolean value : list) if (value) ++size;
+        return size;
+    }
+
+    private String findLongestDescription(List<Pair<Event, List<Boolean>>> sliced) {
+        String longest = "";
+        for (Pair<Event, List<Boolean>> pair : sliced) {
+
+            Event nextEvent = pair.getKey();
+
+            int propertyIndex = nextEvent.getColumnIndex();
+            String propertyName = properties.get(propertyIndex);
+
+            String labelForStrip = nextEvent.eventNameFor(propertyName);
+            String out = labelForStrip + optionalJudgement(pair.getValue());
+            longest = longest.length() < out.length() ? out : longest;
+        }
+        return longest;
+    }
+
+    private String withFixedOffset(int length, String s) {
         if (length == s.length()) return s;
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length - s.length(); i++) {
@@ -228,7 +274,5 @@ public class ResultsEntity {
     private String optionalJudgement(List<Boolean> data) {
         return labelForData(data);
     }
-
-
 }
 

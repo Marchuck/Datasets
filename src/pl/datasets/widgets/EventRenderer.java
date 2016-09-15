@@ -26,7 +26,7 @@ public class EventRenderer implements ListCellRenderer<Event> {
     public Component getListCellRendererComponent(JList<? extends Event> list, Event selectedEvent,
                                                   int index, boolean isSelected, boolean cellHasFocus) {
 
-        label.setText(selectedEvent.eventName(properties));
+        label.setText(selectedEvent.eventNameFor(properties));
 //        if (selectedEvent.isSelected == 0) label.setForeground(classBackground(selectedEvent));
 //        else if (selectedEvent.isSelected == 1) label.setForeground(Color.RED);
 //        else if (selectedEvent.isSelected == 2) label.setForeground(Color.GREEN);
