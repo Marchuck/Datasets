@@ -12,6 +12,12 @@ public class EventResult {
     private Event event;
     private List<List<Long>> results;
 
+    public EventResult(Event event, List<List<Long>> results) {
+
+        this.event = event;
+        this.results = results;
+    }
+
     public Event getEvent() {
         return event;
     }
@@ -25,12 +31,6 @@ public class EventResult {
     }
 
     public void setResults(List<List<Long>> results) {
-        this.results = results;
-    }
-
-    public EventResult(Event event, List<List<Long>> results) {
-
-        this.event = event;
         this.results = results;
     }
 }

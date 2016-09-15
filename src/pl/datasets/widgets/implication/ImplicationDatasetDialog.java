@@ -25,7 +25,7 @@ public class ImplicationDatasetDialog extends DatasetDialog implements ComputeBu
         return new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                /*
                 TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
                 List<Event> events = getEventsFromModel();
 
@@ -39,6 +39,18 @@ public class ImplicationDatasetDialog extends DatasetDialog implements ComputeBu
                         .withLongList(result)
                         .withIndexes(indexesThatShouldBeExposed)
                         .build();
+                */
+
+                TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
+                List<Event> events1 = getEventsFromModel();
+//
+                List<List<Long>> result1 = wrapper.findChainedEventsOccurences(events1, 8);
+
+                int[] indexesThatShouldBeExposed = new int[events1.size()];
+                for (int i = 0; i < events1.size(); i++) {
+                    indexesThatShouldBeExposed[i] = events1.get(i).getColumnIndex();
+                }
+                new ImplicationSolverDialog(result1, indexesThatShouldBeExposed);
             }
         };
     }

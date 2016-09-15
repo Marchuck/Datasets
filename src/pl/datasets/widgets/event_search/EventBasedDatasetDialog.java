@@ -58,7 +58,7 @@ public class EventBasedDatasetDialog extends DatasetDialog implements ComputeBut
                 }
                 List<String> properties = datasetItems.get(0).getProperties();
 //                new Sth(properties,sliced);
-                new EventSearchSummaryDialog(properties, sliced);
+                new EventSearchSummaryDialog(properties, sliced, resultsOfAllSingleWrapperOutput);
 //                new ResultsEntity().withProperties(properties).bindSeparated(sliced);
             }
         };

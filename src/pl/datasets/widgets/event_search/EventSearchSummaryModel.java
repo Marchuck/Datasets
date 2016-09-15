@@ -11,13 +11,16 @@ import java.util.List;
  */
 public class EventSearchSummaryModel {
 
-
     public List<String> properties;
     public List<Pair<Event, List<Boolean>>> sliced;
+    public List<List<List<Long>>> resultsOfAllSingleWrapperOutput;
 
-    public EventSearchSummaryModel(List<String> properties, List<Pair<Event, List<Boolean>>> sliced) {
+    public EventSearchSummaryModel(List<String> properties,
+                                   List<Pair<Event, List<Boolean>>> sliced,
+                                   List<List<List<Long>>> resultsOfAllSingleWrapperOutput) {
         this.properties = properties;
         this.sliced = sliced;
+        this.resultsOfAllSingleWrapperOutput = resultsOfAllSingleWrapperOutput;
     }
 
     public static String labelForData(List<Boolean> data) {

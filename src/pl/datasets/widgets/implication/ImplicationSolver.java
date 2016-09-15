@@ -3,7 +3,6 @@ package pl.datasets.widgets.implication;
 import pl.datasets.model.DatasetItem;
 import pl.datasets.trend_match.TrendingSubsetWrapper;
 import pl.datasets.utils.Event;
-import pl.datasets.utils.Utils;
 import pl.datasets.widgets.event_search.EventResult;
 
 import java.util.ArrayList;
@@ -19,17 +18,7 @@ public class ImplicationSolver {
     private List<Event> chainedEvents;
 
     private TrendingSubsetWrapper trendSolver;
-
-
-    public void setAllowedOffset(int allowedOffset) {
-        this.allowedOffset = allowedOffset;
-    }
-
     private int allowedOffset = 8;
-
-
-
-
 
     public ImplicationSolver(List<DatasetItem> dataset, List<Event> chainedEvents) {
 
@@ -38,7 +27,9 @@ public class ImplicationSolver {
         trendSolver = TrendingSubsetWrapper.getInstance(this.dataset);
     }
 
-
+    public void setAllowedOffset(int allowedOffset) {
+        this.allowedOffset = allowedOffset;
+    }
 
     private List<List<Long>> findChainedEventsOccurences() {
 
@@ -71,18 +62,16 @@ public class ImplicationSolver {
     }
 
 
-    public ImplicationEventResult compute(){
+    public ImplicationEventResult compute() {
 
         List<EventResult> results = new ArrayList<>();
 
-        for (Event event:chainedEvents){
-            results.add(new EventResult(event,trendSolver.getTrends(event,false)));
+        for (Event event : chainedEvents) {
+            results.add(new EventResult(event, trendSolver.getTrends(event, false)));
         }
 
-        return new ImplicationEventResult(results,findChainedEventsOccurences());
+        return new ImplicationEventResult(results, findChainedEventsOccurences());
     }
-
-
 
 
     private List<List<Long>> reduceCandidates(List<Event> chainedEvents, List<List<Long>> implicationCandidates) {

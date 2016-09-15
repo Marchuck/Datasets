@@ -1,10 +1,11 @@
-package pl.datasets.widgets.event_search;
+package pl.datasets.widgets.implication.gui;
 
 import javafx.util.Pair;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.ThreeElements;
 import pl.datasets.utils.Utils;
 import pl.datasets.widgets.ResultCanvas;
+import pl.datasets.widgets.event_search.EventSearchSummaryModel;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -18,7 +19,7 @@ import java.util.List;
  * @author Lukasz
  * @since 15.09.2016.
  */
-public class EventSearchSummaryDialog extends JFrame {
+public class ImplicationSummaryDialog extends JFrame {
 
     private JLabel titlehidden;
     private JPanel rootPanel;
@@ -34,7 +35,7 @@ public class EventSearchSummaryDialog extends JFrame {
 
     private EventSearchSummaryModel model;
 
-    public EventSearchSummaryDialog(List<String> properties, List<Pair<Event, List<Boolean>>> sliced,
+    public ImplicationSummaryDialog(List<String> properties, List<Pair<Event, List<Boolean>>> sliced,
                                     List<List<List<Long>>> resultsOfAllSingleWrapperOutput) {
         super("Summary");
         Utils.log("ImplicationSummaryDialog");
