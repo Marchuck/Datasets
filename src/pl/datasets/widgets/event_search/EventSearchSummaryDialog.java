@@ -1,6 +1,7 @@
 package pl.datasets.widgets.event_search;
 
 import javafx.util.Pair;
+import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.ThreeElements;
 import pl.datasets.utils.Utils;
@@ -11,7 +12,9 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,18 +34,20 @@ public class EventSearchSummaryDialog extends JFrame {
     //models!
     protected DefaultListModel<ThreeElements> statisticsModel = new DefaultListModel<>();
     protected DefaultListModel<String> yellowBoxesModel = new DefaultListModel<>();
+    protected List<DatasetItem> datasetItems = new ArrayList<>();
     protected EventSearchSummaryModel model;
 
-    public EventSearchSummaryDialog() {
-        super("Summary");
+    public EventSearchSummaryDialog(String title) {
+        super(title);
     }
 
-    public EventSearchSummaryDialog(List<String> properties, List<Pair<Event, List<Boolean>>> sliced,
+    public EventSearchSummaryDialog(List<DatasetItem> datasetItems, List<String> properties, List<Pair<Event, List<Boolean>>> sliced,
                                     List<List<List<Long>>> resultsOfAllSingleWrapperOutput) {
-        super("Summary");
+        super("Eventy");
         Utils.log("ImplicationSummaryDialog");
         setContentPane(rootPanel);
 
+        this.datasetItems = datasetItems;
         //setPreferredSize(new Dimension(300, 200));
 
         model = new EventSearchSummaryModel(properties, sliced, resultsOfAllSingleWrapperOutput);
@@ -72,7 +77,10 @@ public class EventSearchSummaryDialog extends JFrame {
         return panel;
     }
     public static Component createComponent(ThreeElements nextListInARow) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+        panel.setBorder(new EmptyBorder(0, 0, 10, 0));
 
         JLabel a = new JLabel(nextListInARow.a, SwingConstants.LEFT);
         JLabel b = new JLabel(nextListInARow.b, SwingConstants.LEFT);
@@ -83,6 +91,7 @@ public class EventSearchSummaryDialog extends JFrame {
         panel.add(a);
         panel.add(b);
         panel.add(c);
+
 
         return panel;
     }
@@ -117,7 +126,7 @@ public class EventSearchSummaryDialog extends JFrame {
                         Event nextEvent = pair.getKey();
                         Utils.log("processing");
 
-                        float[] existanceAndNonExistanceOfEvent = model.getPercentageStatistics(timestampsWhichAgreesWithEvent);
+                        int[] existanceAndNonExistanceOfEvent = model.getPercentageStatistics(timestampsWhichAgreesWithEvent);
                         int[] longestEventLengthAndOccurence = model.getLongestEventLengthAndOccurence(timestampsWhichAgreesWithEvent);
 
                         int propertyId = nextEvent.getColumnIndex();
@@ -125,16 +134,21 @@ public class EventSearchSummaryDialog extends JFrame {
                         String labelForStrip = nextEvent.eventNameFor(propertyName);
 
                         //todo: add more statistical data here
-                        String additionalData = model.optionalJudgement(timestampsWhichAgreesWithEvent);
+                        String additionalData = new StringBuilder()
+                                .append("Ilość pojedynczych trendów: ")
+                                .append(String.valueOf(model.getTrendsAmountForEvent(nextEvent))).toString();
 
-                        String statistics = String.format(" %.2f %%, %.2f %% %d, %d ",
+                        String statistics = String.format("Występowanie trendu w: %d wierszach datasetu, " +
+                                "Absencja trendu w: %d wierszach datasetu, " +
+                                "Najdłuższa niezmienniczość trendu: %d, timestamp rozpoczęcia: %d ",
                                 existanceAndNonExistanceOfEvent[0], existanceAndNonExistanceOfEvent[1], longestEventLengthAndOccurence[0],
                                 longestEventLengthAndOccurence[1]);
 
                         ThreeElements threeElements = new ThreeElements(labelForStrip, statistics, additionalData);
-                        return threeElements;
 
+                        return threeElements;
                     }
+
                 }).toList().map(new Func1<List<ThreeElements>, DefaultListModel<ThreeElements>>() {
             @Override
             public DefaultListModel<ThreeElements> call(List<ThreeElements> threeElementses) {
@@ -183,12 +197,13 @@ public class EventSearchSummaryDialog extends JFrame {
             }
         }, error());
 
-        setGeneralizedStatisticsText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
-                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad \n" +
-                "minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea \n" +
-                "commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit \n" +
-                "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \n" +
-                "non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
+        setGeneralizedStatisticsText("Dataset:  \n" +
+                "Ilość kolumn: "+String.valueOf(datasetItems.get(0).getProperties().size())+"\n" +
+                "Ilość rzędów: "+String.valueOf(datasetItems.size())+"\n" +
+                "Ilość wybranych eventów: "+String.valueOf(model.sliced.size())+"\n"+
+                "\nNa rysunkach, żółtym kolorem zaznaczono przedziały, w których zostały wykryte trendy."
+        );
+
     }
 
     private void setGeneralizedStatisticsText(String s) {

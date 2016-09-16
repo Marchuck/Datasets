@@ -1,11 +1,14 @@
 package pl.datasets.widgets.implication.gui;
 
+import pl.datasets.model.DatasetItem;
 import pl.datasets.utils.Event;
 import pl.datasets.utils.ThreeElements;
 import pl.datasets.utils.Utils;
 import pl.datasets.widgets.ResultCanvas;
+import pl.datasets.widgets.event_search.EventResult;
 import pl.datasets.widgets.event_search.EventSearchSummaryDialog;
 import pl.datasets.widgets.implication.DatasetProvider;
+import pl.datasets.widgets.implication.ImplicationEventResult;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -26,13 +29,16 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
     private List<Event> events;
     private List<List<Long>> implicationData;
 
-    public ImplicationSummaryDialog(List<List<Long>> implicationData, int[] indexesThatShouldBeExposed, List<Event> events1) {
-        super();
-        Utils.log("ImplicationSummaryDialog");
+    private List<DatasetItem> datasetItems;
+
+    public ImplicationSummaryDialog(List<DatasetItem> datasetItems, ImplicationEventResult result,List<Event> events) {
+        super("Implikacja");
+
         setContentPane(rootPanel);
+        this.datasetItems  = datasetItems;
         //setPreferredSize(new Dimension(300, 200));
-        this.implicationData = implicationData;
-        this.events = events1;
+        this.implicationData = result.getListOfFullImplication();
+        this.events = events;
         fillWithdata();
         setMinimumSize(new Dimension(300, 200));
         setLocation(300, 300);
@@ -95,7 +101,6 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
     }
 
     private void fillWithdata() {
-        Utils.log("fillWithdata");
 
         getModelForStatistics().subscribeOn(Schedulers.trampoline())
                 .subscribe(new Action1<DefaultListModel<ThreeElements>>() {
@@ -156,12 +161,17 @@ public class ImplicationSummaryDialog extends EventSearchSummaryDialog {
             }
         }, error());
 
-        setGeneralizedStatisticsText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
-                "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad \n" +
-                "minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea \n" +
-                "commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit \n" +
-                "esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \n" +
-                "non proident, sunt in culpa qui officia deserunt mollit anim id est laborum");
+        setGeneralizedStatisticsText("Dataset:  \n" +
+                "Ilość kolumn: "+String.valueOf(datasetItems.get(0).getProperties().size())+"\n" +
+                "Ilość rzędów: "+String.valueOf(datasetItems.size())+"\n"+
+                "\nBadana implikacja:\n"+
+                "Ilość wystąpień: "+String.valueOf(implicationData.size())+"\n"+
+                "\nNa wykresie zaznaczono występowanie implikacji. \n" +
+                "Odpowiednimi kolorami zaznaczono poszczególne eventy skladające się na jedną implikację. \n" +
+                "Kolory zaznaczeń odpowiadają kolorom na liście wybranych eventów."
+
+
+        );
     }
 
 

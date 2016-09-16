@@ -12,6 +12,11 @@ import java.util.List;
 public class EventSearchSummaryModel {
 
     public List<String> properties;
+
+    public List<Pair<Event, List<Boolean>>> getSliced() {
+        return sliced;
+    }
+
     public List<Pair<Event, List<Boolean>>> sliced;
     public List<List<List<Long>>> resultsOfAllSingleWrapperOutput;
 
@@ -60,15 +65,15 @@ public class EventSearchSummaryModel {
         };
     }
 
-    public float[] getPercentageStatistics(List<Boolean> timestampsWhichAgreesWithEvent) {
+    public int[] getPercentageStatistics(List<Boolean> timestampsWhichAgreesWithEvent) {
         int size = timestampsWhichAgreesWithEvent.size();
         int eventExistanceSize = calculateTimestampOccurrences(timestampsWhichAgreesWithEvent);
         int eventNonExistanceSize = size - eventExistanceSize;
 
-        float percentOfExistance = (float) 100 * eventExistanceSize / size;
-        float percentOfNonExistance = (float) 100 * eventNonExistanceSize / size;
+        //float percentOfExistance = (float) 100 * eventExistanceSize / size;
+        //float percentOfNonExistance = (float) 100 * eventNonExistanceSize / size;
 
-        return new float[]{percentOfExistance, percentOfNonExistance};
+        return new int[]{eventExistanceSize, eventNonExistanceSize};
     }
 
     public int calculateTimestampOccurrences(List<Boolean> timestampsWhichAgreesWithEvent) {
@@ -104,6 +109,16 @@ public class EventSearchSummaryModel {
             sb.append("_");
         }
         return sb.toString() + s;
+    }
+
+    public int getTrendsAmountForEvent(Event event){
+
+        for (Pair<Event, List<Boolean>> pair:sliced){
+            if (pair.getKey().equals(event));
+            return resultsOfAllSingleWrapperOutput.get(sliced.indexOf(pair)).size();
+        }
+
+        return 0;
     }
 
     public String optionalJudgement(List<Boolean> data) {

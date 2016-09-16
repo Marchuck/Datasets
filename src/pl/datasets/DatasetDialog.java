@@ -35,7 +35,6 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
     private JButton addButton;
     private JButton computeButton;
     private JList<Event> operationsList;
-    private JButton beforeAfterButton;
     private SelectOperationDialog selectOperationDialog;
     private String[] properties;
     private DefaultListModel<Event> model = new DefaultListModel<>();
@@ -71,28 +70,11 @@ public abstract class DatasetDialog extends JFrame implements ComputeButtonBehav
     private void init() {
         setupComputeButton();
         setupAddButton();
-        setupBeforeAfterButton();
         setupList();
     }
 
 
-    private void setupBeforeAfterButton() {
-        beforeAfterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new TwoEventsDialog().chooseTwo(beforeAfterButton, getEventsFromModel(), new ItemCallback<Pair<Event, Event>>() {
-                    @Override
-                    public void call(Pair<Event, Event> event) {
-                        TrendingSubsetWrapper wrapper = TrendingSubsetWrapper.getInstance(datasetItems);
-                        List<BeforeAfterPair> beforeAfterPairs = wrapper.findAfter(event.getKey(), event.getValue(), 8);
-                        for (BeforeAfterPair a : beforeAfterPairs) {
-                            Utils.log(a.toString());
-                        }
-                    }
-                });
-            }
-        });
-    }
+
 
     private void setupComputeButton() {
 

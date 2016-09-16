@@ -15,9 +15,9 @@ public class ResultSummaryModel {
 
         double noItems = 0;
 
-        for (List<Long> item:input){
+        for (List<Long> item:input)
             noItems += item.size();
-        }
+
         return noItems/input.size();
     }
 
@@ -25,9 +25,9 @@ public class ResultSummaryModel {
 
         int longest = 0;
 
-        for (List<Long> item:input){
+        for (List<Long> item:input)
             longest = longest>item.size() ? longest : item.size();
-        }
+
 
         return longest;
     }
